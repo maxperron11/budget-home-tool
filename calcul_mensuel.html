@@ -109,7 +109,7 @@
             const realtorFeeAmount = houseSalePrice * realtorFees;
             const totalFees = realtorFeeAmount + notaryFees + inspectionFees + otherFees;
 
-            // Calcul de la taxe de bienvenue
+            // Calcul de la taxe de bienvenue sur le prix de la nouvelle maison
             let welcomeTax = 0;
             if (newHousePrice <= 55200) {
                 welcomeTax = newHousePrice * 0.005;
@@ -121,10 +121,10 @@
                 welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((500000 - 276200) * 0.015) + ((newHousePrice - 500000) * 0.03);
             }
 
-            // Produit net de la vente
+            // Produit net de la vente de la maison actuelle
             const netProceeds = houseSalePrice - totalFees;
 
-            // Calcul du montant total de l'hypothèque
+            // Calcul du montant total de l'hypothèque (nouveau prix de la maison - produit net de la vente + taxe de bienvenue)
             const mortgageAmount = newHousePrice - netProceeds + welcomeTax;
 
             // Calcul du paiement mensuel
