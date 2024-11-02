@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau des Paiements Restants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            font-size: 1.5em;
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 1em;
+            color: #333;
+        }
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .back-button {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .back-button a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        .back-button a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tableau des Paiements Restants</h1>
+
+    <label for="startDate">Date de début du terme :</label>
+    <input type="date" id="startDate" required>
+
+    <label for="termDuration">Durée du terme (en années) :</label>
+    <input type="number" id="termDuration" value="5" required>
+
+    <label for="amortizationPeriod">Durée d'amortissement totale (en années) :</label>
+    <input type="number" id="amortizationPeriod" value="25" required>
+
+    <label for="initialMortgage">Montant initial de l’hypothèque :</label>
+    <input type="number" id="initialMortgage" required>
+
+    <label for="interestRate">Taux d'intérêt annuel (%) :</label>
+    <input type="number" id="interestRate" step="0.1" required>
+
+    <label for="monthlyPayment">Montant des paiements mensuels :</label>
+    <input type="number" id="monthlyPayment" required>
+
+    <button onclick="generatePaymentSchedule()">Générer le tableau des paiements</button>
+
+    <div id="paymentSchedule" class="result hidden">
+        <h2>Tableau des paiements restants</h2>
+        <table id="paymentTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Versement</th>
+                    <th>Intérêt</th>
+                    <th>Capital</th>
+                    <th>Solde restant</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les lignes du tableau seront générées ici -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="back-button">
+        <a href="index.html">Retour à l'accueil</a>
+    </div>
+
+    <script>
+        function generatePaymentSchedule() {
+            // Récupérer les valeurs des champs
+            const startDate = new Date(document.getElementById("startDate").value);
+            const termDuration = parseInt(document.getElementById("termDuration").value);
+            const amortizationPeriod = parseInt(document.getElementById("amortizationPeriod").value);
+            const initialMortgage = parseFloat(document.getElementById("initialMortgage").value);
+            const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            const monthlyPayment = parseFloat(document.getElementById("monthlyPayment").value);
+
+            // Calculer le nombre total de paiements dans le terme
+            const totalPaymentsInTerm = termDuration * 12;
+            let remainingBalance = initialMortgage;
+            
+            // Afficher le tableau
+            const paymentTableBody = document.getElementById("paymentTable").querySelector("tbody");
+            paymentTableBody.innerHTML = ""; // Efface le contenu précédent
+            
+            for (let i = 0; i < totalPaymentsInTerm; i++) {
+                const interestPayment = remainingBalance * interestRate;
+                const principalPayment = monthlyPayment - interestPayment;
+                remainingBalance -= principalPayment;
+
+                // Calcul de la date de paiement
+                const paymentDate = new Date(startDate);
+                paymentDate.setMonth(startDate.getMonth() + i);
+
+                // Ajouter une ligne au tableau
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${paymentDate.toLocaleDateString()}</td>
+                    <td>${monthlyPayment.toFixed(2)} $</td>
+                    <td>${interestPayment.toFixed(2)} $</td>
+                    <td>${principalPayment.toFixed(2)} $</td>
+                    <td>${remainingBalance.toFixed(2)} $</td>
+                `;
+                paymentTableBody.appendChild(row);
+
+                // Arrêter si le solde est payé
+                if (remainingBalance <= 0) break;
+            }
+
+            // Afficher la section des résultats
+            document.getElementById("paymentSchedule").classList.remove("hidden");
+        }
+    </script>
+
+</body>
+</html>
