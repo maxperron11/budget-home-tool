@@ -65,6 +65,9 @@
     <label for="houseSalePrice">Prix de vente de la maison actuelle :</label>
     <input type="number" id="houseSalePrice" value="680000" required>
 
+    <label for="remainingMortgage">Solde hypothécaire actuel à rembourser :</label>
+    <input type="number" id="remainingMortgage" value="342530" required>
+
     <label for="newHousePrice">Prix de la nouvelle maison :</label>
     <input type="number" id="newHousePrice" value="800000" required>
 
@@ -97,6 +100,7 @@
         function calculateMonthlyPayment() {
             // Récupérer les valeurs des champs
             const houseSalePrice = parseFloat(document.getElementById("houseSalePrice").value);
+            const remainingMortgage = parseFloat(document.getElementById("remainingMortgage").value);
             const newHousePrice = parseFloat(document.getElementById("newHousePrice").value);
             const realtorFees = parseFloat(document.getElementById("realtorFees").value) / 100;
             const notaryFees = parseFloat(document.getElementById("notaryFees").value);
@@ -121,8 +125,8 @@
                 welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((500000 - 276200) * 0.015) + ((newHousePrice - 500000) * 0.03);
             }
 
-            // Produit net de la vente de la maison actuelle
-            const netProceeds = houseSalePrice - totalFees;
+            // Produit net de la vente de la maison actuelle après remboursement du solde hypothécaire
+            const netProceeds = houseSalePrice - totalFees - remainingMortgage;
 
             // Calcul du montant total de l'hypothèque (nouveau prix de la maison - produit net de la vente + taxe de bienvenue)
             const mortgageAmount = newHousePrice - netProceeds + welcomeTax;
