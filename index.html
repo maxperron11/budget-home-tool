@@ -125,25 +125,28 @@
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
             const amortization = parseInt(document.getElementById("amortization").value) * 12;
 
-            // Calcul de la taxe de bienvenue
-            let welcomeTax = 0;
-            if (salePrice <= 55200) {
-                welcomeTax = salePrice * 0.005;
-            } else if (salePrice <= 276200) {
-                welcomeTax = (55200 * 0.005) + ((salePrice - 55200) * 0.01);
-            } else {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((salePrice - 276200) * 0.015);
-            }
-
             // Calcul de la mise de fonds disponible
             const realtorFeeAmount = salePrice * realtorFees;
-            const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - welcomeTax - notaryFees - inspectionFees - otherFees;
+            const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
 
             // Calcul de l'hypothèque maximale possible
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
 
-            // Calcul du montant total maximal pour la nouvelle maison
-            const maxHomePrice = netProceeds + maxLoanAmount;
+            // Calcul du montant total maximal pour la nouvelle maison avant la taxe de bienvenue
+            const maxHomePriceWithoutWelcomeTax = netProceeds + maxLoanAmount;
+
+            // Calcul de la taxe de bienvenue en fonction de maxHomePriceWithoutWelcomeTax
+            let welcomeTax = 0;
+            if (maxHomePriceWithoutWelcomeTax <= 55200) {
+                welcomeTax = maxHomePriceWithoutWelcomeTax * 0.005;
+            } else if (maxHomePriceWithoutWelcomeTax <= 276200) {
+                welcomeTax = (55200 * 0.005) + ((maxHomePriceWithoutWelcomeTax - 55200) * 0.01);
+            } else {
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((maxHomePriceWithoutWelcomeTax - 276200) * 0.015);
+            }
+
+            // Calcul final du montant total maximal pour la nouvelle maison après taxe de bienvenue
+            const maxHomePrice = maxHomePriceWithoutWelcomeTax - welcomeTax;
 
             // Afficher le rapport
             document.getElementById("calculatorSection").classList.add("hidden");
