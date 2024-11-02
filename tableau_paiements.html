@@ -85,23 +85,20 @@
 
     <h1>Tableau des Paiements Restants</h1>
 
-    <label for="startDate">Date de début du terme :</label>
+    <label for="startDate">Date du début du calcul :</label>
     <input type="date" id="startDate" required>
 
-    <label for="termDuration">Durée du terme (en années) :</label>
-    <input type="number" id="termDuration" value="5" required>
+    <label for="endDate">Date de fin du terme :</label>
+    <input type="date" id="endDate" required>
 
-    <label for="amortizationPeriod">Durée d'amortissement totale (en années) :</label>
-    <input type="number" id="amortizationPeriod" value="25" required>
-
-    <label for="initialMortgage">Montant initial de l’hypothèque :</label>
-    <input type="number" id="initialMortgage" required>
-
-    <label for="interestRate">Taux d'intérêt annuel (%) :</label>
-    <input type="number" id="interestRate" step="0.1" required>
+    <label for="remainingBalance">Solde actuel de l’hypothèque :</label>
+    <input type="number" id="remainingBalance" step="0.01" required>
 
     <label for="monthlyPayment">Montant des paiements mensuels :</label>
-    <input type="number" id="monthlyPayment" required>
+    <input type="number" id="monthlyPayment" step="0.01" required>
+
+    <label for="interestRate">Taux d'intérêt annuel (%) :</label>
+    <input type="number" id="interestRate" step="0.01" required>
 
     <button onclick="generatePaymentSchedule()">Générer le tableau des paiements</button>
 
@@ -131,36 +128,35 @@
         function generatePaymentSchedule() {
             // Récupérer les valeurs des champs
             const startDate = new Date(document.getElementById("startDate").value);
-            const termDuration = parseInt(document.getElementById("termDuration").value);
-            const amortizationPeriod = parseInt(document.getElementById("amortizationPeriod").value);
-            const initialMortgage = parseFloat(document.getElementById("initialMortgage").value);
-            const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            const endDate = new Date(document.getElementById("endDate").value);
+            let remainingBalance = parseFloat(document.getElementById("remainingBalance").value);
             const monthlyPayment = parseFloat(document.getElementById("monthlyPayment").value);
+            const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
 
-            // Calculer le nombre total de paiements dans le terme
-            const totalPaymentsInTerm = termDuration * 12;
-            let remainingBalance = initialMortgage;
-            
+            // Calculer le nombre de mois entre la date de début et la date de fin
+            const monthsRemaining = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
+
             // Afficher le tableau
             const paymentTableBody = document.getElementById("paymentTable").querySelector("tbody");
             paymentTableBody.innerHTML = ""; // Efface le contenu précédent
             
-            for (let i = 0; i < totalPaymentsInTerm; i++) {
-                const interestPayment = remainingBalance * interestRate;
-                const principalPayment = monthlyPayment - interestPayment;
-                remainingBalance -= principalPayment;
+            for (let month = 0; month < monthsRemaining; month++) {
+                // Calcul des intérêts et du capital pour le mois
+                const interestForMonth = remainingBalance * interestRate;
+                const principalForMonth = monthlyPayment - interestForMonth;
+                remainingBalance -= principalForMonth;
 
-                // Calcul de la date de paiement
+                // Calcul de la date du paiement
                 const paymentDate = new Date(startDate);
-                paymentDate.setMonth(startDate.getMonth() + i);
+                paymentDate.setMonth(startDate.getMonth() + month);
 
                 // Ajouter une ligne au tableau
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${paymentDate.toLocaleDateString()}</td>
                     <td>${monthlyPayment.toFixed(2)} $</td>
-                    <td>${interestPayment.toFixed(2)} $</td>
-                    <td>${principalPayment.toFixed(2)} $</td>
+                    <td>${interestForMonth.toFixed(2)} $</td>
+                    <td>${principalForMonth.toFixed(2)} $</td>
                     <td>${remainingBalance.toFixed(2)} $</td>
                 `;
                 paymentTableBody.appendChild(row);
