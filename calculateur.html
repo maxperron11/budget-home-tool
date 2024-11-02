@@ -23,7 +23,7 @@
             font-size: 1em;
             color: #333;
         }
-        input[type="number"] {
+        input[type="text"] {
             width: 100%;
             padding: 12px;
             font-size: 1em;
@@ -141,7 +141,7 @@
             const value = input.value;
             const errorElement = document.getElementById(input.id + "Error");
 
-            // Vérifie si la valeur contient des caractères autres que des chiffres
+            // Vérifie si la valeur contient des caractères autres que des chiffres ou un point décimal
             if (!/^\d*\.?\d*$/.test(value)) {
                 errorElement.style.display = "block";
                 input.style.borderColor = "red";
@@ -187,5 +187,3 @@
             let welcomeTax = 0;
             if (maxHomePriceWithoutWelcomeTax <= 55200) {
                 welcomeTax = maxHomePriceWithoutWelcomeTax * 0.005;
-            } else if (maxHomePriceWithoutWelcomeTax <= 276200) {
-                welcomeTax = (55200 * 0.005) + ((maxHomePriceWithoutWelcomeTax - 55200) * 0.01
