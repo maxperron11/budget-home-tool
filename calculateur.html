@@ -143,21 +143,21 @@
             const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
 
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
-            const maxHomePriceWithoutWelcomeTax = netProceeds + maxLoanAmount;
+            const newHousePrice = netProceeds + maxLoanAmount; // Utilisation de la base du prix de la maison
 
-            // Mise à jour du calcul de la taxe de bienvenue avec la tranche de 3 %
+            // Calcul de la taxe de bienvenue basée sur la valeur de la nouvelle maison
             let welcomeTax = 0;
-            if (maxHomePriceWithoutWelcomeTax <= 55200) {
-                welcomeTax = maxHomePriceWithoutWelcomeTax * 0.005;
-            } else if (maxHomePriceWithoutWelcomeTax <= 276200) {
-                welcomeTax = (55200 * 0.005) + ((maxHomePriceWithoutWelcomeTax - 55200) * 0.01);
-            } else if (maxHomePriceWithoutWelcomeTax <= 500000) {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((maxHomePriceWithoutWelcomeTax - 276200) * 0.015);
+            if (newHousePrice <= 55200) {
+                welcomeTax = newHousePrice * 0.005;
+            } else if (newHousePrice <= 276200) {
+                welcomeTax = (55200 * 0.005) + ((newHousePrice - 55200) * 0.01);
+            } else if (newHousePrice <= 500000) {
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((newHousePrice - 276200) * 0.015);
             } else {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((500000 - 276200) * 0.015) + ((maxHomePriceWithoutWelcomeTax - 500000) * 0.03);
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((500000 - 276200) * 0.015) + ((newHousePrice - 500000) * 0.03);
             }
 
-            const maxHomePrice = maxHomePriceWithoutWelcomeTax - welcomeTax;
+            const maxHomePrice = newHousePrice - welcomeTax;
 
             document.getElementById("calculatorSection").classList.add("hidden");
             document.getElementById("reportSection").classList.remove("hidden");
