@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil - Outils de Calcul Hypothécaire</title>
+    <title>Tableau des Paiements Restants</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,97 +11,159 @@
             margin: auto;
             padding: 20px;
             background-color: #f4f4f9;
-            text-align: center;
         }
         h1 {
-            font-size: 1.8em;
+            font-size: 1.5em;
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 1em;
             color: #333;
         }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
         button {
-            display: block;
-            width: 80%;
+            width: 100%;
             padding: 15px;
             background-color: #007bff;
             color: white;
-            font-size: 1.2em;
+            font-size: 1em;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-decoration: none;
-            margin: 0 auto;
+            margin-top: 15px;
         }
         button:hover {
             background-color: #0056b3;
         }
-        .info-icon {
-            font-size: 1.5em;
-            color: #333;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        .info-icon:hover {
-            color: #555;
-        }
-        .info-section {
-            display: none;
+        .result {
             margin-top: 20px;
-            font-size: 1em;
+            font-size: 1.2em;
+            font-weight: bold;
             color: #333;
-            text-align: left;
-            background-color: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .back-button {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .back-button a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        .back-button a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <h1>Accueil - Outils de Calcul Hypothécaire</h1>
-    <p>Bienvenue sur notre site ! Choisissez l'outil que vous souhaitez utiliser.</p>
+    <h1>Tableau des Paiements Restants</h1>
 
-    <!-- Bouton pour accéder au calculateur de budget avec point d'interrogation -->
-    <div class="button-container">
-        <a href="calculateur.html">
-            <button>Calculateur de Budget pour une Nouvelle Maison</button>
-        </a>
-        <span class="info-icon" onclick="toggleInfo('calculateurInfo')">❓</span>
+    <label for="startDate">Date du début du calcul :</label>
+    <input type="date" id="startDate" required>
+
+    <label for="remainingBalance">Solde actuel de l’hypothèque :</label>
+    <input type="number" id="remainingBalance" step="0.01" required>
+
+    <label for="monthlyPayment">Montant des paiements mensuels :</label>
+    <input type="number" id="monthlyPayment" step="0.01" required>
+
+    <label for="interestRate">Taux d'intérêt annuel (%) :</label>
+    <input type="number" id="interestRate" step="0.01" required>
+
+    <label for="monthsRemaining">Nombre de mois restants jusqu'à la fin du terme :</label>
+    <input type="number" id="monthsRemaining" required>
+
+    <button onclick="generatePaymentSchedule()">Générer le tableau des paiements</button>
+
+    <div id="paymentSchedule" class="result hidden">
+        <h2>Tableau des paiements restants</h2>
+        <table id="paymentTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Versement</th>
+                    <th>Intérêt</th>
+                    <th>Capital</th>
+                    <th>Solde restant</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les lignes du tableau seront générées ici -->
+            </tbody>
+        </table>
     </div>
 
-    <!-- Section d'explication pour le calculateur de budget -->
-    <div id="calculateurInfo" class="info-section">
-        <p><strong>Calculateur de Budget pour une Nouvelle Maison :</strong></p>
-        <p>Ce calculateur vous aide à estimer le budget dont vous disposez pour l'achat d'une nouvelle maison. En saisissant le prix de vente de votre maison actuelle, le solde hypothécaire restant, vos épargnes, et les différents frais (notaire, courtage, etc.), l'outil vous fournira une estimation du montant total disponible pour votre nouvelle propriété.</p>
-    </div>
-
-    <!-- Bouton pour accéder au tableau des paiements restants avec point d'interrogation -->
-    <div class="button-container">
-        <a href="tableau_paiements.html">
-            <button>Tableau des Paiements Restants</button>
-        </a>
-        <span class="info-icon" onclick="toggleInfo('paiementsInfo')">❓</span>
-    </div>
-
-    <!-- Section d'explication pour le tableau des paiements restants -->
-    <div id="paiementsInfo" class="info-section">
-        <p><strong>Tableau des Paiements Restants :</strong></p>
-        <p>Ce tableau vous permet de visualiser les paiements hypothécaires restants jusqu'à la fin de votre terme actuel. En entrant la date de début du terme, la durée du terme, le montant initial de l'hypothèque, le taux d'intérêt et le montant des paiements mensuels, vous obtiendrez un calendrier des paiements jusqu'à la fin du terme.</p>
+    <div class="back-button">
+        <a href="index.html">Retour à l'accueil</a>
     </div>
 
     <script>
-        function toggleInfo(infoId) {
-            const infoSection = document.getElementById(infoId);
-            // Affiche ou masque la section d'information en fonction de son état actuel
-            if (infoSection.style.display === "none" || infoSection.style.display === "") {
-                infoSection.style.display = "block";
-            } else {
-                infoSection.style.display = "none";
+        function generatePaymentSchedule() {
+            // Récupérer les valeurs des champs
+            const startDate = new Date(document.getElementById("startDate").value);
+            let remainingBalance = parseFloat(document.getElementById("remainingBalance").value);
+            const monthlyPayment = parseFloat(document.getElementById("monthlyPayment").value);
+            const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            const monthsRemaining = parseInt(document.getElementById("monthsRemaining").value);
+
+            // Afficher le tableau
+            const paymentTableBody = document.getElementById("paymentTable").querySelector("tbody");
+            paymentTableBody.innerHTML = ""; // Efface le contenu précédent
+            
+            for (let month = 0; month < monthsRemaining; month++) {
+                // Calcul des intérêts et du capital pour le mois
+                const interestForMonth = remainingBalance * interestRate;
+                const principalForMonth = monthlyPayment - interestForMonth;
+                remainingBalance -= principalForMonth;
+
+                // Calcul de la date du paiement
+                const paymentDate = new Date(startDate);
+                paymentDate.setMonth(startDate.getMonth() + month);
+
+                // Ajouter une ligne au tableau
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${paymentDate.toLocaleDateString()}</td>
+                    <td>${monthlyPayment.toFixed(2)} $</td>
+                    <td>${interestForMonth.toFixed(2)} $</td>
+                    <td>${principalForMonth.toFixed(2)} $</td>
+                    <td>${remainingBalance.toFixed(2)} $</td>
+                `;
+                paymentTableBody.appendChild(row);
+
+                // Arrêter si le solde est payé
+                if (remainingBalance <= 0) break;
             }
+
+            // Afficher la section des résultats
+            document.getElementById("paymentSchedule").classList.remove("hidden");
         }
     </script>
 
