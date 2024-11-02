@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Budget pour une Nouvelle Maison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            font-size: 1.5em;
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 1em;
+            color: #333;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="calculatorSection">
+        <h1>Calculateur de Budget pour une Nouvelle Maison</h1>
+
+        <label for="salePrice">Prix de vente estimé de votre maison actuelle :</label>
+        <input type="number" id="salePrice" value="680000" required>
+
+        <label for="remainingMortgage">Solde hypothécaire actuel :</label>
+        <input type="number" id="remainingMortgage" value="342530" required>
+
+        <label for="savings">Montant à mettre de côté pour l’épargne :</label>
+        <input type="number" id="savings" value="40000" required>
+
+        <label for="realtorFees">Pourcentage pour les frais de courtage immobilier :</label>
+        <input type="number" id="realtorFees" value="5" step="0.1" required>
+
+        <!-- Frais d'achat détaillés -->
+        <label for="welcomeTax">Droits de mutation immobilière (calcul automatique) :</label>
+        <input type="number" id="welcomeTax" value="9270.5" readonly>
+
+        <label for="notaryFees">Frais de notaire :</label>
+        <input type="number" id="notaryFees" value="2000" required>
+
+        <label for="inspectionFees">Inspection pré-achat :</label>
+        <input type="number" id="inspectionFees" value="1000" required>
+
+        <label for="otherFees">Autres frais (assurances, frais divers) :</label>
+        <input type="number" id="otherFees" value="1000" required>
+
+        <label for="monthlyPayment">Paiement mensuel maximal souhaité :</label>
+        <input type="number" id="monthlyPayment" value="2000" required>
+
+        <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
+        <input type="number" id="interestRate" value="3" step="0.1" required>
+
+        <label for="amortization">Durée d'amortissement (en années) :</label>
+        <input type="number" id="amortization" value="25" required>
+
+        <button onclick="generateReport()">Générer le rapport</button>
+    </div>
+
+    <div id="reportSection" class="hidden">
+        <h1>Rapport de Budget pour l'Achat de Maison</h1>
+        <div id="reportContent"></div>
+        <button onclick="showCalculator()">Retour à la Table de Calcul</button>
+    </div>
+
+    <script>
+        function showCalculator() {
+            document.getElementById("calculatorSection").classList.remove("hidden");
+            document.getElementById("reportSection").classList.add("hidden");
+        }
+
+        function generateReport() {
+            // Récupérer les valeurs des champs
+            const salePrice = parseFloat(document.getElementById("salePrice").value);
+            const remainingMortgage = parseFloat(document.getElementById("remainingMortgage").value);
+            const savings = parseFloat(document.getElementById("savings").value);
+            const realtorFees = parseFloat(document.getElementById("realtorFees").value) / 100;
+            const notaryFees = parseFloat(document.getElementById("notaryFees").value);
+            const inspectionFees = parseFloat(document.getElementById("inspectionFees").value);
+            const otherFees = parseFloat(document.getElementById("otherFees").value);
+            const monthlyPayment = parseFloat(document.getElementById("monthlyPayment").value);
+            const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            const amortization = parseInt(document.getElementById("amortization").value) * 12;
+
+            // Calcul de la taxe de bienvenue
+            let welcomeTax = 0;
+            if (salePrice <= 55200) {
+                welcomeTax = salePrice * 0.005;
+            } else if (salePrice <= 276200) {
+                welcomeTax = (55200 * 0.005) + ((salePrice - 55200) * 0.01);
+            } else {
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((salePrice - 276200) * 0.015);
+            }
+
+            // Calcul de la mise de fonds disponible
+            const realtorFeeAmount = salePrice * realtorFees;
+            const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - welcomeTax - notaryFees - inspectionFees - otherFees;
+
+            // Calcul de l'hypothèque maximale possible
+            const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
+
+            // Calcul du montant total maximal pour la nouvelle maison
+            const maxHomePrice = netProceeds + maxLoanAmount;
+
+            // Afficher le rapport
+            document.getElementById("calculatorSection").classList.add("hidden");
+            document.getElementById("reportSection").classList.remove("hidden");
+
+            // Contenu du rapport
+            document.getElementById("reportContent").innerHTML = `
+                <p><strong>Prix de vente estimé :</strong> ${salePrice.toFixed(2)} $</p>
+                <p><strong>Solde hypothécaire restant :</strong> ${remainingMortgage.toFixed(2)} $</p>
+                <p><strong>Montant épargné :</strong> ${savings.toFixed(2)} $</p>
+                <p><strong>Frais de courtage :</strong> ${realtorFeeAmount.toFixed(2)} $</p>
+                <p><strong>Taxe de bienvenue :</strong> ${welcomeTax.toFixed(2)} $</p>
+                <p><strong>Frais de notaire :</strong> ${notaryFees.toFixed(2)} $</p>
+                <p><strong>Frais d'inspection :</strong> ${inspectionFees.toFixed(2)} $</p>
+                <p><strong>Autres frais :</strong> ${otherFees.toFixed(2)} $</p>
+                <p><strong>Montant maximal de l'hypothèque :</strong> ${maxLoanAmount.toFixed(2)} $</p>
+                <p><strong>Montant total maximal pour la nouvelle maison :</strong> ${maxHomePrice.toFixed(2)} $</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
