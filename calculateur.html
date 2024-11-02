@@ -23,7 +23,7 @@
             font-size: 1em;
             color: #333;
         }
-        input[type="text"] {
+        input[type="number"] {
             width: 100%;
             padding: 12px;
             font-size: 1em;
@@ -31,11 +31,6 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
-        }
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-            display: none;
         }
         button {
             width: 100%;
@@ -76,106 +71,46 @@
     </style>
 </head>
 <body>
-
     <div id="calculatorSection">
         <h1>Calculateur de Budget pour une Nouvelle Maison</h1>
-
         <label for="salePrice">Prix de vente estimé de votre maison actuelle :</label>
-        <input type="text" id="salePrice" value="680000">
-        <div id="salePriceError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="salePrice" value="680000" required>
         <label for="remainingMortgage">Solde hypothécaire actuel :</label>
-        <input type="text" id="remainingMortgage" value="322762">
-        <div id="remainingMortgageError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="remainingMortgage" value="322762" required>
         <label for="savings">Montant à mettre de côté pour l’épargne :</label>
-        <input type="text" id="savings" value="40000">
-        <div id="savingsError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="savings" value="40000" required>
         <label for="realtorFees">Pourcentage pour les frais de courtage immobilier :</label>
-        <input type="text" id="realtorFees" value="5">
-        <div id="realtorFeesError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="realtorFees" value="5" step="0.1" required>
         <label>Taxe de bienvenue :</label>
         <p>La taxe de bienvenue sera calculée automatiquement et affichée dans le rapport des résultats.</p>
-
         <label for="notaryFees">Frais de notaire :</label>
-        <input type="text" id="notaryFees" value="2000">
-        <div id="notaryFeesError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="notaryFees" value="2000" required>
         <label for="inspectionFees">Inspection pré-achat :</label>
-        <input type="text" id="inspectionFees" value="1000">
-        <div id="inspectionFeesError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="inspectionFees" value="1000" required>
         <label for="otherFees">Autres frais (assurances, frais divers) :</label>
-        <input type="text" id="otherFees" value="1000">
-        <div id="otherFeesError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="otherFees" value="1000" required>
         <label for="monthlyPayment">Paiement mensuel maximal souhaité :</label>
-        <input type="text" id="monthlyPayment" value="2000">
-        <div id="monthlyPaymentError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="monthlyPayment" value="2000" required>
         <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
-        <input type="text" id="interestRate" value="3">
-        <div id="interestRateError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="interestRate" value="3" step="0.1" required>
         <label for="amortization">Durée d'amortissement (en années) :</label>
-        <input type="text" id="amortization" value="25">
-        <div id="amortizationError" class="error-message">Seulement des chiffres sont acceptés.</div>
-
+        <input type="number" id="amortization" value="25" required>
         <button onclick="generateReport()">Générer le rapport</button>
     </div>
-
     <div id="reportSection" class="hidden">
         <h1>Rapport de Budget pour l'Achat de Maison</h1>
         <div id="reportContent"></div>
         <button onclick="showCalculator()">Retour à la Table de Calcul</button>
     </div>
-
     <div class="back-button">
         <a href="index.html">Retour à l'accueil</a>
     </div>
-
     <script>
-        function validateAllFields() {
-            const fields = [
-                "salePrice", "remainingMortgage", "savings", "realtorFees", 
-                "notaryFees", "inspectionFees", "otherFees", "monthlyPayment", 
-                "interestRate", "amortization"
-            ];
-            let allValid = true;
-
-            fields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                const errorElement = document.getElementById(fieldId + "Error");
-                
-                // Vérifie si le champ contient uniquement des chiffres
-                if (!/^\d*\.?\d+$/.test(field.value)) {
-                    errorElement.style.display = "block";
-                    field.style.borderColor = "red";
-                    allValid = false;
-                } else {
-                    errorElement.style.display = "none";
-                    field.style.borderColor = "";
-                }
-            });
-
-            return allValid;
-        }
-
         function showCalculator() {
             document.getElementById("calculatorSection").classList.remove("hidden");
             document.getElementById("reportSection").classList.add("hidden");
         }
-
         function generateReport() {
-            // Valide tous les champs avant de procéder au calcul
-            if (!validateAllFields()) {
-                alert("Veuillez corriger les erreurs avant de générer le rapport.");
-                return;
-            }
-
-            // Code de génération du rapport
             const salePrice = parseFloat(document.getElementById("salePrice").value);
             const remainingMortgage = parseFloat(document.getElementById("remainingMortgage").value);
             const savings = parseFloat(document.getElementById("savings").value);
@@ -186,17 +121,19 @@
             const monthlyPayment = parseFloat(document.getElementById("monthlyPayment").value);
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
             const amortization = parseInt(document.getElementById("amortization").value) * 12;
-
             const realtorFeeAmount = salePrice * realtorFees;
             const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
-
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
             const maxHomePriceWithoutWelcomeTax = netProceeds + maxLoanAmount;
-
             let welcomeTax = 0;
             if (maxHomePriceWithoutWelcomeTax <= 55200) {
                 welcomeTax = maxHomePriceWithoutWelcomeTax * 0.005;
             } else if (maxHomePriceWithoutWelcomeTax <= 276200) {
                 welcomeTax = (55200 * 0.005) + ((maxHomePriceWithoutWelcomeTax - 55200) * 0.01);
             } else {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((maxHomePriceWithoutWelcomeTax - 276200) * 0.015);
+            }
+            const maxHomePrice = maxHomePriceWithoutWelcomeTax - welcomeTax;
+            document.getElementById("calculatorSection").classList.add("hidden");
+            document.getElementById("reportSection").classList.remove("hidden");
+           
