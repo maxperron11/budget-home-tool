@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul des Paiements Mensuels pour une Nouvelle Maison</title>
+    <title>Calcul des Paiements Mensuels pour une Nouvelle Hypothèque</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,123 +53,51 @@
             color: #333;
             text-align: center;
         }
-        .result-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-            background-color: #e9ecef;
-            margin: 10px 0;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        .result p {
-            margin: 8px 0;
-            font-size: 1em;
-            line-height: 1.4em;
-        }
-        .highlight {
-            font-size: 1.4em;
-            color: #28a745;
-            font-weight: bold;
-        }
         .hidden {
             display: none;
-        }
-        .back-button {
-            text-align: center;
-            margin-top: 15px;
-        }
-        .back-button a {
-            color: #007bff;
-            text-decoration: none;
-            font-size: 1em;
-        }
-        .back-button a:hover {
-            text-decoration: underline;
-        }
-        /* Responsive adjustments for mobile */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.3em;
-            }
-            .result p {
-                font-size: 0.9em;
-            }
-            .highlight {
-                font-size: 1.2em;
-            }
         }
     </style>
 </head>
 <body>
 
-    <div id="calculatorSection">
-        <h1>Calcul des Paiements Mensuels pour une Nouvelle Maison</h1>
+    <h1>Calcul des Paiements Mensuels pour une Nouvelle Hypothèque</h1>
 
-        <label for="housePrice">Prix de la nouvelle maison :</label>
-        <input type="number" id="housePrice" value="500000" required>
+    <label for="houseSalePrice">Prix de vente de la maison actuelle :</label>
+    <input type="number" id="houseSalePrice" value="680000" required>
 
-        <label for="remainingMortgage">Solde hypothécaire actuel :</label>
-        <input type="number" id="remainingMortgage" value="342530" required>
+    <label for="newHousePrice">Prix de la nouvelle maison :</label>
+    <input type="number" id="newHousePrice" value="800000" required>
 
-        <label for="savings">Montant à mettre de côté pour l’épargne :</label>
-        <input type="number" id="savings" value="40000" required>
+    <label for="realtorFees">Pourcentage pour les frais de courtage immobilier (%) :</label>
+    <input type="number" id="realtorFees" value="5" step="0.1" required>
 
-        <label for="realtorFees">Pourcentage pour les frais de courtage immobilier :</label>
-        <input type="number" id="realtorFees" value="5" step="0.1" required>
+    <label for="notaryFees">Frais de notaire :</label>
+    <input type="number" id="notaryFees" value="2000" required>
 
-        <label>Taxe de bienvenue :</label>
-        <p>La taxe de bienvenue sera calculée automatiquement et affichée dans le rapport des résultats.</p>
+    <label for="inspectionFees">Frais d'inspection :</label>
+    <input type="number" id="inspectionFees" value="1000" required>
 
-        <label for="notaryFees">Frais de notaire :</label>
-        <input type="number" id="notaryFees" value="2000" required>
+    <label for="otherFees">Autres frais (assurances, etc.) :</label>
+    <input type="number" id="otherFees" value="1000" required>
 
-        <label for="inspectionFees">Inspection pré-achat :</label>
-        <input type="number" id="inspectionFees" value="1000" required>
+    <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
+    <input type="number" id="interestRate" value="3" step="0.1" required>
 
-        <label for="otherFees">Autres frais (assurances, frais divers) :</label>
-        <input type="number" id="otherFees" value="1000" required>
+    <label for="amortization">Durée d'amortissement (en années) :</label>
+    <input type="number" id="amortization" value="25" required>
 
-        <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
-        <input type="number" id="interestRate" value="3" step="0.1" required>
-
-        <label for="amortization">Durée d'amortissement (en années) :</label>
-        <input type="number" id="amortization" value="25" required>
-
-        <button onclick="calculateMonthlyPayment()">Calculer le paiement mensuel</button>
-    </div>
+    <button onclick="calculateMonthlyPayment()">Calculer le paiement mensuel</button>
 
     <div id="resultSection" class="result hidden">
-        <h2>Résultat</h2>
-        <div class="result-section">
-            <p><strong>Prix de la nouvelle maison :</strong> <span id="housePriceResult"></span> $</p>
-            <p><strong>Solde hypothécaire restant :</strong> <span id="remainingMortgageResult"></span> $</p>
-            <p><strong>Montant à mettre de côté :</strong> <span id="savingsResult"></span> $</p>
-            <p><strong>Frais de courtage :</strong> <span id="realtorFeesResult"></span> $</p>
-            <p><strong>Taxe de bienvenue :</strong> <span id="welcomeTaxResult"></span> $</p>
-            <p><strong>Frais de notaire :</strong> <span id="notaryFeesResult"></span> $</p>
-            <p><strong>Frais d'inspection :</strong> <span id="inspectionFeesResult"></span> $</p>
-            <p><strong>Autres frais :</strong> <span id="otherFeesResult"></span> $</p>
-            <p><strong>Montant des paiements mensuels :</strong> <span class="highlight" id="monthlyPaymentResult"></span> $</p>
-        </div>
-        <button onclick="showCalculator()">Retour</button>
-    </div>
-
-    <div class="back-button">
-        <a href="index.html">Retour à l'accueil</a>
+        <p>Montant total de l'hypothèque : <span id="mortgageAmount"></span> $</p>
+        <p>Montant des paiements mensuels : <span id="monthlyPaymentResult"></span> $</p>
     </div>
 
     <script>
-        function showCalculator() {
-            document.getElementById("calculatorSection").classList.remove("hidden");
-            document.getElementById("resultSection").classList.add("hidden");
-        }
-
         function calculateMonthlyPayment() {
-            const housePrice = parseFloat(document.getElementById("housePrice").value);
-            const remainingMortgage = parseFloat(document.getElementById("remainingMortgage").value);
-            const savings = parseFloat(document.getElementById("savings").value);
+            // Récupérer les valeurs des champs
+            const houseSalePrice = parseFloat(document.getElementById("houseSalePrice").value);
+            const newHousePrice = parseFloat(document.getElementById("newHousePrice").value);
             const realtorFees = parseFloat(document.getElementById("realtorFees").value) / 100;
             const notaryFees = parseFloat(document.getElementById("notaryFees").value);
             const inspectionFees = parseFloat(document.getElementById("inspectionFees").value);
@@ -177,37 +105,35 @@
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
             const amortization = parseInt(document.getElementById("amortization").value) * 12;
 
-            // Calcul des frais
-            const realtorFeeAmount = housePrice * realtorFees;
+            // Calcul des frais de courtage et autres frais
+            const realtorFeeAmount = houseSalePrice * realtorFees;
             const totalFees = realtorFeeAmount + notaryFees + inspectionFees + otherFees;
 
             // Calcul de la taxe de bienvenue
             let welcomeTax = 0;
-            if (housePrice <= 55200) {
-                welcomeTax = housePrice * 0.005;
-            } else if (housePrice <= 276200) {
-                welcomeTax = (55200 * 0.005) + ((housePrice - 55200) * 0.01);
+            if (newHousePrice <= 55200) {
+                welcomeTax = newHousePrice * 0.005;
+            } else if (newHousePrice <= 276200) {
+                welcomeTax = (55200 * 0.005) + ((newHousePrice - 55200) * 0.01);
+            } else if (newHousePrice <= 500000) {
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((newHousePrice - 276200) * 0.015);
             } else {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((housePrice - 276200) * 0.015);
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((500000 - 276200) * 0.015) + ((newHousePrice - 500000) * 0.03);
             }
 
-            // Calcul du montant de prêt net et du paiement mensuel
-            const netMortgageAmount = housePrice - remainingMortgage - savings - totalFees - welcomeTax;
-            const monthlyPayment = (netMortgageAmount * interestRate) / (1 - Math.pow(1 + interestRate, -amortization));
+            // Produit net de la vente
+            const netProceeds = houseSalePrice - totalFees;
 
-            // Affichage des résultats
-            document.getElementById("calculatorSection").classList.add("hidden");
-            document.getElementById("resultSection").classList.remove("hidden");
+            // Calcul du montant total de l'hypothèque
+            const mortgageAmount = newHousePrice - netProceeds + welcomeTax;
 
-            document.getElementById("housePriceResult").textContent = housePrice.toFixed(2);
-            document.getElementById("remainingMortgageResult").textContent = remainingMortgage.toFixed(2);
-            document.getElementById("savingsResult").textContent = savings.toFixed(2);
-            document.getElementById("realtorFeesResult").textContent = realtorFeeAmount.toFixed(2);
-            document.getElementById("welcomeTaxResult").textContent = welcomeTax.toFixed(2);
-            document.getElementById("notaryFeesResult").textContent = notaryFees.toFixed(2);
-            document.getElementById("inspectionFeesResult").textContent = inspectionFees.toFixed(2);
-            document.getElementById("otherFeesResult").textContent = otherFees.toFixed(2);
+            // Calcul du paiement mensuel
+            const monthlyPayment = (mortgageAmount * interestRate) / (1 - Math.pow(1 + interestRate, -amortization));
+
+            // Afficher le résultat
+            document.getElementById("mortgageAmount").textContent = mortgageAmount.toFixed(2);
             document.getElementById("monthlyPaymentResult").textContent = monthlyPayment.toFixed(2);
+            document.getElementById("resultSection").classList.remove("hidden");
         }
     </script>
 
