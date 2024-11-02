@@ -145,13 +145,16 @@
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
             const maxHomePriceWithoutWelcomeTax = netProceeds + maxLoanAmount;
 
+            // Mise à jour du calcul de la taxe de bienvenue avec la tranche de 3 %
             let welcomeTax = 0;
             if (maxHomePriceWithoutWelcomeTax <= 55200) {
                 welcomeTax = maxHomePriceWithoutWelcomeTax * 0.005;
             } else if (maxHomePriceWithoutWelcomeTax <= 276200) {
                 welcomeTax = (55200 * 0.005) + ((maxHomePriceWithoutWelcomeTax - 55200) * 0.01);
-            } else {
+            } else if (maxHomePriceWithoutWelcomeTax <= 500000) {
                 welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((maxHomePriceWithoutWelcomeTax - 276200) * 0.015);
+            } else {
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((500000 - 276200) * 0.015) + ((maxHomePriceWithoutWelcomeTax - 500000) * 0.03);
             }
 
             const maxHomePrice = maxHomePriceWithoutWelcomeTax - welcomeTax;
