@@ -48,13 +48,34 @@
         }
         .result {
             margin-top: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
+            font-size: 1em;
             color: #333;
-            text-align: center;
+        }
+        .result-section {
+            padding: 10px;
+            background-color: #e9ecef;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .highlight {
+            font-size: 1.4em;
+            color: #28a745;
+            font-weight: bold;
         }
         .hidden {
             display: none;
+        }
+        .back-button {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .back-button a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        .back-button a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -62,41 +83,54 @@
 
     <h1>Calcul des Paiements Mensuels pour une Nouvelle Hypothèque</h1>
 
-    <label for="houseSalePrice">Prix de vente de la maison actuelle :</label>
-    <input type="number" id="houseSalePrice" value="680000" required>
+    <div id="calculatorSection">
+        <label for="houseSalePrice">Prix de vente de la maison actuelle :</label>
+        <input type="number" id="houseSalePrice" value="680000" required>
 
-    <label for="remainingMortgage">Solde hypothécaire actuel à rembourser :</label>
-    <input type="number" id="remainingMortgage" value="342530" required>
+        <label for="remainingMortgage">Solde hypothécaire actuel à rembourser :</label>
+        <input type="number" id="remainingMortgage" value="342530" required>
 
-    <label for="newHousePrice">Prix de la nouvelle maison :</label>
-    <input type="number" id="newHousePrice" value="800000" required>
+        <label for="newHousePrice">Prix de la nouvelle maison :</label>
+        <input type="number" id="newHousePrice" value="800000" required>
 
-    <label for="realtorFees">Pourcentage pour les frais de courtage immobilier (%) :</label>
-    <input type="number" id="realtorFees" value="5" step="0.1" required>
+        <label for="realtorFees">Pourcentage pour les frais de courtage immobilier (%) :</label>
+        <input type="number" id="realtorFees" value="5" step="0.1" required>
 
-    <label for="notaryFees">Frais de notaire :</label>
-    <input type="number" id="notaryFees" value="2000" required>
+        <label for="notaryFees">Frais de notaire :</label>
+        <input type="number" id="notaryFees" value="2000" required>
 
-    <label for="inspectionFees">Frais d'inspection :</label>
-    <input type="number" id="inspectionFees" value="1000" required>
+        <label for="inspectionFees">Frais d'inspection :</label>
+        <input type="number" id="inspectionFees" value="1000" required>
 
-    <label for="otherFees">Autres frais (assurances, etc.) :</label>
-    <input type="number" id="otherFees" value="1000" required>
+        <label for="otherFees">Autres frais (assurances, etc.) :</label>
+        <input type="number" id="otherFees" value="1000" required>
 
-    <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
-    <input type="number" id="interestRate" value="3" step="0.1" required>
+        <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
+        <input type="number" id="interestRate" value="3" step="0.1" required>
 
-    <label for="amortization">Durée d'amortissement (en années) :</label>
-    <input type="number" id="amortization" value="25" required>
+        <label for="amortization">Durée d'amortissement (en années) :</label>
+        <input type="number" id="amortization" value="25" required>
 
-    <button onclick="calculateMonthlyPayment()">Calculer le paiement mensuel</button>
+        <button onclick="calculateMonthlyPayment()">Calculer le paiement mensuel</button>
+    </div>
 
     <div id="resultSection" class="result hidden">
-        <p>Montant total de l'hypothèque : <span id="mortgageAmount"></span> $</p>
-        <p>Montant des paiements mensuels : <span id="monthlyPaymentResult"></span> $</p>
+        <h2>Rapport de Calcul</h2>
+        <div class="result-section">
+            <p><strong>Produit net de la vente après frais et remboursement de l'hypothèque actuelle :</strong> <span id="netProceedsResult"></span> $</p>
+            <p><strong>Taxe de bienvenue :</strong> <span id="welcomeTaxResult"></span> $</p>
+            <p><strong>Montant total de l'hypothèque nécessaire :</strong> <span class="highlight" id="mortgageAmountResult"></span> $</p>
+            <p><strong>Montant des paiements mensuels :</strong> <span class="highlight" id="monthlyPaymentResult"></span> $</p>
+        </div>
+        <button onclick="showCalculator()">Retour</button>
     </div>
 
     <script>
+        function showCalculator() {
+            document.getElementById("calculatorSection").classList.remove("hidden");
+            document.getElementById("resultSection").classList.add("hidden");
+        }
+
         function calculateMonthlyPayment() {
             // Récupérer les valeurs des champs
             const houseSalePrice = parseFloat(document.getElementById("houseSalePrice").value);
@@ -135,8 +169,12 @@
             const monthlyPayment = (mortgageAmount * interestRate) / (1 - Math.pow(1 + interestRate, -amortization));
 
             // Afficher le résultat
-            document.getElementById("mortgageAmount").textContent = mortgageAmount.toFixed(2);
+            document.getElementById("netProceedsResult").textContent = netProceeds.toFixed(2);
+            document.getElementById("welcomeTaxResult").textContent = welcomeTax.toFixed(2);
+            document.getElementById("mortgageAmountResult").textContent = mortgageAmount.toFixed(2);
             document.getElementById("monthlyPaymentResult").textContent = monthlyPayment.toFixed(2);
+
+            document.getElementById("calculatorSection").classList.add("hidden");
             document.getElementById("resultSection").classList.remove("hidden");
         }
     </script>
