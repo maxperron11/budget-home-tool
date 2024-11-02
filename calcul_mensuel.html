@@ -139,7 +139,6 @@
         }
 
         function calculateMonthlyPayment() {
-            // Récupérer les valeurs des champs
             const houseSalePrice = parseFloat(document.getElementById("houseSalePrice").value);
             const remainingMortgage = parseFloat(document.getElementById("remainingMortgage").value);
             const newHousePrice = parseFloat(document.getElementById("newHousePrice").value);
@@ -151,32 +150,26 @@
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
             const amortization = parseInt(document.getElementById("amortization").value) * 12;
 
-            // Calcul des frais de courtage et autres frais
             const realtorFeeAmount = houseSalePrice * realtorFees;
             const totalFees = realtorFeeAmount + notaryFees + inspectionFees + otherFees;
 
-            // Calcul de la taxe de bienvenue sur le prix de la nouvelle maison
             let welcomeTax = 0;
-            if (newHousePrice <= 55200) {
+            if (newHousePrice <= 58900) {
                 welcomeTax = newHousePrice * 0.005;
-            } else if (newHousePrice <= 276200) {
-                welcomeTax = (55200 * 0.005) + ((newHousePrice - 55200) * 0.01);
-            } else if (newHousePrice <= 500000) {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((newHousePrice - 276200) * 0.015);
+            } else if (newHousePrice <= 294600) {
+                welcomeTax = (58900 * 0.005) + ((newHousePrice - 58900) * 0.01);
+            } else if (newHousePrice <= 585200) {
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((newHousePrice - 294600) * 0.015);
+            } else if (newHousePrice <= 1170500) {
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((newHousePrice - 585200) * 0.02);
             } else {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((500000 - 276200) * 0.015) + ((newHousePrice - 500000) * 0.03);
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((1170500 - 585200) * 0.02) + ((newHousePrice - 1170500) * 0.03);
             }
 
-            // Produit net de la vente de la maison actuelle après remboursement du solde hypothécaire et épargnes
             const netProceeds = houseSalePrice - totalFees - remainingMortgage - savings;
-
-            // Calcul du montant total de l'hypothèque (nouveau prix de la maison - produit net de la vente + taxe de bienvenue)
             const mortgageAmount = newHousePrice - netProceeds + welcomeTax;
-
-            // Calcul du paiement mensuel
             const monthlyPayment = (mortgageAmount * interestRate) / (1 - Math.pow(1 + interestRate, -amortization));
 
-            // Afficher le résultat
             document.getElementById("netProceedsResult").textContent = netProceeds.toFixed(2);
             document.getElementById("welcomeTaxResult").textContent = welcomeTax.toFixed(2);
             document.getElementById("mortgageAmountResult").textContent = mortgageAmount.toFixed(2);
