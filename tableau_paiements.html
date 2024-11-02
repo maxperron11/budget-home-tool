@@ -61,11 +61,16 @@
         }
         th, td {
             border: 1px solid #ccc;
-            padding: 8px;
+            padding: 12px;
             text-align: center;
+            font-size: 0.9em;
         }
         th {
             background-color: #f2f2f2;
+            font-size: 1em;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
         .back-button {
             text-align: center;
@@ -78,6 +83,16 @@
         }
         .back-button a:hover {
             text-decoration: underline;
+        }
+        /* Responsive adjustments for mobile */
+        @media (max-width: 600px) {
+            th, td {
+                padding: 8px;
+                font-size: 0.85em;
+            }
+            h1 {
+                font-size: 1.3em;
+            }
         }
     </style>
 </head>
@@ -165,10 +180,13 @@
                 const paymentDate = new Date(startDate);
                 paymentDate.setMonth(startDate.getMonth() + month);
 
+                // Formater la date en français
+                const formattedDate = paymentDate.toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
+
                 // Ajouter une ligne au tableau
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td>${paymentDate.toLocaleDateString()}</td>
+                    <td>${formattedDate}</td>
                     <td>${monthlyPayment.toFixed(2)} $</td>
                     <td>${interestForMonth.toFixed(2)} $</td>
                     <td>${principalForMonth.toFixed(2)} $</td>
