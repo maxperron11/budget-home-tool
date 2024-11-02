@@ -159,4 +159,21 @@
             document.getElementById("calculatorSection").classList.add("hidden");
             document.getElementById("reportSection").classList.remove("hidden");
 
-           
+            // Contenu du rapport
+            document.getElementById("reportContent").innerHTML = `
+                <p><strong>Prix de vente estimé :</strong> ${salePrice.toFixed(2)} $</p>
+                <p><strong>Solde hypothécaire restant :</strong> ${remainingMortgage.toFixed(2)} $</p>
+                <p><strong>Montant épargné :</strong> ${savings.toFixed(2)} $</p>
+                <p><strong>Frais de courtage :</strong> ${realtorFeeAmount.toFixed(2)} $</p>
+                <p><strong>Taxe de bienvenue :</strong> ${welcomeTax.toFixed(2)} $</p>
+                <p><strong>Frais de notaire :</strong> ${notaryFees.toFixed(2)} $</p>
+                <p><strong>Frais d'inspection :</strong> ${inspectionFees.toFixed(2)} $</p>
+                <p><strong>Autres frais :</strong> ${otherFees.toFixed(2)} $</p>
+                <p><strong>Montant maximal de l'hypothèque :</strong> ${maxLoanAmount.toFixed(2)} $</p>
+                <p><strong>Montant total maximal pour la nouvelle maison :</strong> ${maxHomePrice.toFixed(2)} $</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
