@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Budget pour une Nouvelle Maison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            font-size: 1.5em;
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 1em;
+            color: #333;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .back-button {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .back-button a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        .back-button a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="calculatorSection">
+        <h1>Calculateur de Budget pour une Nouvelle Maison</h1>
+
+        <label for="salePrice">Prix de vente estimé de votre maison actuelle :</label>
+        <input type="number" id="salePrice" value="680000" required>
+
+        <label for="remainingMortgage">Solde hypothécaire actuel :</label>
+        <input type="number" id="remainingMortgage" value="322762" required>
+
+        <label for="savings">Montant à mettre de côté pour l’épargne :</label>
+        <input type="number" id="savings" value="40000" required>
+
+        <label for="realtorFees">Pourcentage pour les frais de courtage immobilier :</label>
+        <input type="number" id="realtorFees" value="5" step="0.1" required>
+
+        <label>Taxe de bienvenue :</label>
+        <p>La taxe de bienvenue sera calculée automatiquement et affichée dans le rapport des résultats.</p>
+
+        <label for="notaryFees">Frais de notaire :</label>
+        <input type="number" id="notaryFees" value="2000" required>
+
+        <label for="inspectionFees">Inspection pré-achat :</label>
+        <input type="number" id="inspectionFees" value="1000" required>
+
+        <label for="otherFees">Autres frais (assurances, frais divers) :</label>
+        <input type="number" id="otherFees" value="1000" required>
+
+        <label for="monthlyPayment">Paiement mensuel maximal souhaité :</label>
+        <input type="number" id="monthlyPayment" value="2000" required>
+
+        <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
+        <input type="number" id="interestRate" value="3" step="0.1" required>
+
+        <label for="amortization">Durée d'amortissement (en années) :</label>
+        <input type="number" id="amortization" value="25" required>
+
+        <button onclick="generateReport()">Générer le rapport</button>
+    </div>
+
+    <div id="reportSection" class="hidden">
+        <h1>Rapport de Budget pour l'Achat de Maison</h1>
+        <div id="reportContent"></div>
+        <button onclick="showCalculator()">Retour à la Table de Calcul</button>
+    </div>
+
+    <div class="back-button">
+        <a href="index.html">Retour à l'accueil</a>
+    </div>
+
+    <script>
+        function showCalculator() {
+            document.getElementById("calculatorSection").classList.remove("hidden");
+            document.getElementById("reportSection").classList.add("hidden");
+        }
+
+        function generateReport() {
+            const salePrice = parseFloat(document.getElementById("salePrice").value);
+            const remainingMortgage = parseFloat(document.getElementById("remainingMortgage").value);
+            const savings = parseFloat(document.getElementById("savings").value);
+            const realtorFees = parseFloat(document.getElementById("realtorFees").value) / 100;
+            const notaryFees = parseFloat(document.getElementById("notaryFees").value);
+            const inspectionFees = parseFloat(document.getElementById("inspectionFees").value);
+            const otherFees = parseFloat(document.getElementById("otherFees").value);
+            const monthlyPayment = parseFloat(document.getElementById("monthlyPayment").value);
+            const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            const amortization = parseInt(document.getElementById("amortization").value) * 12;
+
+            const realtorFeeAmount = salePrice * realtorFees;
+            const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
+
+            const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
+            const maxHomePriceWithoutWelcomeTax = netProceeds + maxLoanAmount;
+
+            let welcomeTax = 0;
+            if (maxHomePriceWithoutWelcomeTax <= 55200) {
+                welcomeTax = maxHomePriceWithoutWelcomeTax * 0.005;
+            } else if (maxHomePriceWithoutWelcomeTax <= 276200) {
+                welcomeTax = (55200 * 0.005) + ((maxHomePriceWithoutWelcomeTax - 55200) * 0.01);
+            } else {
+                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((maxHomePriceWithoutWelcomeTax - 276200) * 0.015);
+            }
+
+            const maxHomePrice = maxHomePriceWithoutWelcomeTax - welcomeTax;
+
+            document.getElementById("calculatorSection").classList.add("hidden");
+            document.getElementById("reportSection").classList.remove("hidden");
+
+           
