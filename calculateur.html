@@ -81,46 +81,46 @@
         <h1>Calculateur de Budget pour une Nouvelle Maison</h1>
 
         <label for="salePrice">Prix de vente estimé de votre maison actuelle :</label>
-        <input type="number" id="salePrice" value="680000" oninput="validateInput(this)">
+        <input type="text" id="salePrice" value="680000" oninput="validateInput(this)">
         <div id="salePriceError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label for="remainingMortgage">Solde hypothécaire actuel :</label>
-        <input type="number" id="remainingMortgage" value="322762" oninput="validateInput(this)">
+        <input type="text" id="remainingMortgage" value="322762" oninput="validateInput(this)">
         <div id="remainingMortgageError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label for="savings">Montant à mettre de côté pour l’épargne :</label>
-        <input type="number" id="savings" value="40000" oninput="validateInput(this)">
+        <input type="text" id="savings" value="40000" oninput="validateInput(this)">
         <div id="savingsError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label for="realtorFees">Pourcentage pour les frais de courtage immobilier :</label>
-        <input type="number" id="realtorFees" value="5" step="0.1" oninput="validateInput(this)">
+        <input type="text" id="realtorFees" value="5" oninput="validateInput(this)">
         <div id="realtorFeesError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label>Taxe de bienvenue :</label>
         <p>La taxe de bienvenue sera calculée automatiquement et affichée dans le rapport des résultats.</p>
 
         <label for="notaryFees">Frais de notaire :</label>
-        <input type="number" id="notaryFees" value="2000" oninput="validateInput(this)">
+        <input type="text" id="notaryFees" value="2000" oninput="validateInput(this)">
         <div id="notaryFeesError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label for="inspectionFees">Inspection pré-achat :</label>
-        <input type="number" id="inspectionFees" value="1000" oninput="validateInput(this)">
+        <input type="text" id="inspectionFees" value="1000" oninput="validateInput(this)">
         <div id="inspectionFeesError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label for="otherFees">Autres frais (assurances, frais divers) :</label>
-        <input type="number" id="otherFees" value="1000" oninput="validateInput(this)">
+        <input type="text" id="otherFees" value="1000" oninput="validateInput(this)">
         <div id="otherFeesError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label for="monthlyPayment">Paiement mensuel maximal souhaité :</label>
-        <input type="number" id="monthlyPayment" value="2000" oninput="validateInput(this)">
+        <input type="text" id="monthlyPayment" value="2000" oninput="validateInput(this)">
         <div id="monthlyPaymentError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
-        <input type="number" id="interestRate" value="3" step="0.1" oninput="validateInput(this)">
+        <input type="text" id="interestRate" value="3" oninput="validateInput(this)">
         <div id="interestRateError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <label for="amortization">Durée d'amortissement (en années) :</label>
-        <input type="number" id="amortization" value="25" oninput="validateInput(this)">
+        <input type="text" id="amortization" value="25" oninput="validateInput(this)">
         <div id="amortizationError" class="error-message">Seulement des chiffres sont acceptés.</div>
 
         <button onclick="generateReport()">Générer le rapport</button>
@@ -141,6 +141,7 @@
             const value = input.value;
             const errorElement = document.getElementById(input.id + "Error");
 
+            // Vérifie si la valeur contient des caractères autres que des chiffres
             if (!/^\d*\.?\d*$/.test(value)) {
                 errorElement.style.display = "block";
                 input.style.borderColor = "red";
@@ -187,6 +188,4 @@
             if (maxHomePriceWithoutWelcomeTax <= 55200) {
                 welcomeTax = maxHomePriceWithoutWelcomeTax * 0.005;
             } else if (maxHomePriceWithoutWelcomeTax <= 276200) {
-                welcomeTax = (55200 * 0.005) + ((maxHomePriceWithoutWelcomeTax - 55200) * 0.01);
-            } else {
-                welcome
+                welcomeTax = (55200 * 0.005) + ((maxHomePriceWithoutWelcomeTax - 55200) * 0.01
