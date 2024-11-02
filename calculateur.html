@@ -143,18 +143,19 @@
             const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
 
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
-            const newHousePrice = netProceeds + maxLoanAmount; // Utilisation de la base du prix de la maison
+            const newHousePrice = netProceeds + maxLoanAmount;
 
-            // Calcul de la taxe de bienvenue basée sur la valeur de la nouvelle maison
             let welcomeTax = 0;
-            if (newHousePrice <= 55200) {
+            if (newHousePrice <= 58900) {
                 welcomeTax = newHousePrice * 0.005;
-            } else if (newHousePrice <= 276200) {
-                welcomeTax = (55200 * 0.005) + ((newHousePrice - 55200) * 0.01);
-            } else if (newHousePrice <= 500000) {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((newHousePrice - 276200) * 0.015);
+            } else if (newHousePrice <= 294600) {
+                welcomeTax = (58900 * 0.005) + ((newHousePrice - 58900) * 0.01);
+            } else if (newHousePrice <= 585200) {
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((newHousePrice - 294600) * 0.015);
+            } else if (newHousePrice <= 1170500) {
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((newHousePrice - 585200) * 0.02);
             } else {
-                welcomeTax = (55200 * 0.005) + ((276200 - 55200) * 0.01) + ((500000 - 276200) * 0.015) + ((newHousePrice - 500000) * 0.03);
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((1170500 - 585200) * 0.02) + ((newHousePrice - 1170500) * 0.03);
             }
 
             const maxHomePrice = newHousePrice - welcomeTax;
