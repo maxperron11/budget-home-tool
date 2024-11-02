@@ -93,6 +93,20 @@
         <p>Ce tableau vous permet de visualiser les paiements hypothécaires restants jusqu'à la fin de votre terme actuel. En entrant la date de début du terme, la date de fin, le montant initial de l'hypothèque, le taux d'intérêt et le montant des paiements mensuels, vous obtiendrez un calendrier des paiements jusqu'à la fin du terme.</p>
     </div>
 
+    <!-- Bouton pour accéder au calcul des paiements mensuels avec point d'interrogation -->
+    <div class="button-container">
+        <a href="calcul_mensuel.html">
+            <button>Calcul des Paiements Mensuels pour une Nouvelle Maison</button>
+        </a>
+        <span class="info-icon" onclick="toggleInfo('mensuelInfo')">❓</span>
+    </div>
+
+    <!-- Section d'explication pour le calcul des paiements mensuels -->
+    <div id="mensuelInfo" class="info-section">
+        <p><strong>Calcul des Paiements Mensuels pour une Nouvelle Maison :</strong></p>
+        <p>Ce calculateur permet de déterminer les paiements mensuels en fonction du prix de la nouvelle maison. En entrant le prix de la propriété, le solde hypothécaire restant, le montant à mettre de côté pour l'épargne, et le taux d'intérêt, vous pouvez estimer le paiement mensuel requis.</p>
+    </div>
+
     <script>
         function toggleInfo(infoId) {
             const infoSection = document.getElementById(infoId);
