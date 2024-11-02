@@ -17,9 +17,15 @@
             font-size: 1.8em;
             color: #333;
         }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
         button {
             display: block;
-            width: 100%;
+            width: 80%;
             padding: 15px;
             background-color: #007bff;
             color: white;
@@ -27,11 +33,30 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 20px 0;
             text-decoration: none;
+            margin: 0 auto;
         }
         button:hover {
             background-color: #0056b3;
+        }
+        .info-icon {
+            font-size: 1.5em;
+            color: #333;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .info-icon:hover {
+            color: #555;
+        }
+        .info-section {
+            display: none;
+            margin-top: 20px;
+            font-size: 1em;
+            color: #333;
+            text-align: left;
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -40,15 +65,45 @@
     <h1>Accueil - Calculateur de Budget Maison</h1>
     <p>Bienvenue sur notre site ! Choisissez l'outil que vous souhaitez utiliser.</p>
 
-    <!-- Bouton pour accéder au calculateur de budget -->
-    <a href="calculateur.html">
-        <button>Calculateur de Budget pour une Nouvelle Maison</button>
-    </a>
+    <!-- Bouton pour accéder au calculateur de budget avec point d'interrogation -->
+    <div class="button-container">
+        <a href="calculateur.html">
+            <button>Calculateur de Budget pour une Nouvelle Maison</button>
+        </a>
+        <span class="info-icon" onclick="toggleInfo('calculateurInfo')">❓</span>
+    </div>
 
-    <!-- Vous pouvez ajouter d'autres boutons ici pour de futurs outils -->
-    <a href="#">
-        <button>Autre Outil à Venir</button>
-    </a>
+    <!-- Section d'explication pour le calculateur de budget -->
+    <div id="calculateurInfo" class="info-section">
+        <p><strong>Calculateur de Budget pour une Nouvelle Maison :</strong></p>
+        <p>Ce calculateur vous aide à estimer le budget dont vous disposez pour l'achat d'une nouvelle maison. En saisissant le prix de vente de votre maison actuelle, le solde hypothécaire restant, vos épargnes, et les différents frais (notaire, courtage, etc.), l'outil vous fournira une estimation du montant total disponible pour votre nouvelle propriété.</p>
+    </div>
+
+    <!-- Exemple d'ajout d'un autre bouton avec info -->
+    <div class="button-container">
+        <a href="#">
+            <button>Autre Outil à Venir</button>
+        </a>
+        <span class="info-icon" onclick="toggleInfo('autreOutilInfo')">❓</span>
+    </div>
+
+    <!-- Section d'explication pour l'autre outil -->
+    <div id="autreOutilInfo" class="info-section">
+        <p><strong>Autre Outil à Venir :</strong></p>
+        <p>Cette section est destinée à un futur outil. Les informations détaillées seront disponibles ici une fois l'outil ajouté.</p>
+    </div>
+
+    <script>
+        function toggleInfo(infoId) {
+            const infoSection = document.getElementById(infoId);
+            // Affiche ou masque la section d'information en fonction de son état actuel
+            if (infoSection.style.display === "none" || infoSection.style.display === "") {
+                infoSection.style.display = "block";
+            } else {
+                infoSection.style.display = "none";
+            }
+        }
+    </script>
 
 </body>
 </html>
