@@ -108,29 +108,63 @@
             <option value="10">10 ans</option>
         </select>
 
-        <button onclick="calculateRenewalPayment()">Calculer le paiement mensuel</button>
+        <h2>Ajouter une nouvelle tranche d'hypothèque</h2>
+        
+        <label for="additionalLoanAmount">Montant de la nouvelle tranche :</label>
+        <input type="number" id="additionalLoanAmount" placeholder="Ex: 150000">
+
+        <label for="additionalRate">Taux d'intérêt pour la nouvelle tranche (%) :</label>
+        <input type="number" id="additionalRate" placeholder="Ex: 2.5" step="0.01">
+
+        <label for="additionalAmortization">Durée d'amortissement pour la nouvelle tranche (années) :</label>
+        <select id="additionalAmortization">
+            <option value="25" selected>25 ans</option>
+            <option value="20">20 ans</option>
+            <option value="15">15 ans</option>
+            <option value="10">10 ans</option>
+        </select>
+
+        <button onclick="calculateTotalPayment()">Calculer le paiement mensuel total</button>
     </div>
 
     <div id="resultSection" class="result hidden">
         <h2>Résultat du Calcul</h2>
-        <p><strong>Montant des paiements mensuels :</strong> <span class="highlight" id="monthlyPaymentResult"></span> $</p>
+        <p><strong>Montant des paiements mensuels pour le renouvellement :</strong> <span class="highlight" id="renewalPaymentResult"></span> $</p>
+        <p><strong>Montant des paiements mensuels pour la nouvelle tranche :</strong> <span class="highlight" id="additionalPaymentResult"></span> $</p>
+        <p><strong>Total des paiements mensuels :</strong> <span class="highlight" id="totalPaymentResult"></span> $</p>
     </div>
 
     <!-- Bouton pour revenir à l'index -->
     <a href="index.html" class="back-button">Retour à l'accueil</a>
 
     <script>
-        function calculateRenewalPayment() {
-            // Récupérer les valeurs des champs
+        function calculateTotalPayment() {
+            // Récupérer les valeurs des champs pour le renouvellement de l'hypothèque
             const remainingBalance = parseFloat(document.getElementById("remainingBalance").value);
             const renewalRate = parseFloat(document.getElementById("renewalRate").value) / 100 / 12; // Taux mensuel
             const amortizationDuration = parseInt(document.getElementById("amortizationDuration").value) * 12; // Convertir en mois
 
-            // Calculer le paiement mensuel en fonction du montant résiduel, du taux et de l'amortissement
-            const monthlyPayment = (remainingBalance * renewalRate) / (1 - Math.pow(1 + renewalRate, -amortizationDuration));
+            // Calculer le paiement mensuel pour le renouvellement
+            const renewalPayment = (remainingBalance * renewalRate) / (1 - Math.pow(1 + renewalRate, -amortizationDuration));
 
-            // Afficher le résultat
-            document.getElementById("monthlyPaymentResult").textContent = monthlyPayment.toFixed(2);
+            // Récupérer les valeurs des champs pour la nouvelle tranche
+            const additionalLoanAmount = parseFloat(document.getElementById("additionalLoanAmount").value) || 0;
+            const additionalRate = parseFloat(document.getElementById("additionalRate").value) / 100 / 12 || 0; // Taux mensuel
+            const additionalAmortization = parseInt(document.getElementById("additionalAmortization").value) * 12; // Convertir en mois
+
+            // Calculer le paiement mensuel pour la nouvelle tranche, seulement si un montant est saisi
+            let additionalPayment = 0;
+            if (additionalLoanAmount > 0 && additionalRate > 0) {
+                additionalPayment = (additionalLoanAmount * additionalRate) / (1 - Math.pow(1 + additionalRate, -additionalAmortization));
+            }
+
+            // Calculer le total des paiements mensuels
+            const totalPayment = renewalPayment + additionalPayment;
+
+            // Afficher les résultats
+            document.getElementById("renewalPaymentResult").textContent = renewalPayment.toFixed(2);
+            document.getElementById("additionalPaymentResult").textContent = additionalPayment.toFixed(2);
+            document.getElementById("totalPaymentResult").textContent = totalPayment.toFixed(2);
             document.getElementById("resultSection").classList.remove("hidden");
         }
     </script>
