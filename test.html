@@ -74,6 +74,18 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
+        .back-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
         .error-message {
             color: red;
             font-size: 0.9em;
@@ -127,12 +139,18 @@
         <span class="error-message" id="amortizationError">Veuillez entrer un nombre valide.</span>
 
         <button onclick="validateAndGenerateReport()">Générer le rapport</button>
+        <div class="back-link">
+            <a href="index.html">Retour à l'accueil</a>
+        </div>
     </div>
 
     <div id="reportSection" class="hidden">
         <h1>Rapport de Budget pour l'Achat de Maison</h1>
         <div id="reportContent"></div>
         <button onclick="showCalculator()">Retour à la Table de Calcul</button>
+        <div class="back-link">
+            <a href="index.html">Retour à l'accueil</a>
+        </div>
     </div>
 
     <script>
