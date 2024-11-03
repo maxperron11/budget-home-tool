@@ -107,6 +107,20 @@
         <p>Ce calculateur permet de déterminer les paiements mensuels en fonction du prix de la nouvelle maison. En entrant le prix de la propriété, le solde hypothécaire restant, le montant à mettre de côté pour l'épargne, et le taux d'intérêt, vous pouvez estimer le paiement mensuel requis.</p>
     </div>
 
+    <!-- Nouveau bouton pour le calcul des paiements au renouvellement d'hypothèque -->
+    <div class="button-container">
+        <a href="calcul_renouvellement.html">
+            <button>Calcul des Paiements Mensuels au Renouvellement</button>
+        </a>
+        <span class="info-icon" onclick="toggleInfo('renouvellementInfo')">❓</span>
+    </div>
+
+    <!-- Section d'explication pour le calcul des paiements au renouvellement d'hypothèque -->
+    <div id="renouvellementInfo" class="info-section">
+        <p><strong>Calcul des Paiements Mensuels au Renouvellement :</strong></p>
+        <p>Ce calculateur vous permet de déterminer le montant des paiements mensuels lors de votre renouvellement d'hypothèque à une date précise. En entrant le solde hypothécaire restant, le taux d'intérêt renouvelé, la période d'amortissement restante, et la date du renouvellement, vous pouvez estimer le nouveau montant mensuel à payer.</p>
+    </div>
+
     <script>
         function toggleInfo(infoId) {
             const infoSection = document.getElementById(infoId);
