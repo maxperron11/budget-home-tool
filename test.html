@@ -84,9 +84,31 @@
         <input type="number" id="realtorFees" value="5" step="0.1" required>
         <span class="error-message" id="realtorFeesError">Veuillez entrer un nombre valide.</span>
 
-        <!-- Ajoutez les autres champs ici avec les messages d'erreur similaires -->
+        <label for="notaryFees">Frais de notaire :</label>
+        <input type="number" id="notaryFees" value="2000" required>
+        <span class="error-message" id="notaryFeesError">Veuillez entrer un nombre valide.</span>
 
-        <button onclick="validateInputs()">Générer le rapport</button>
+        <label for="inspectionFees">Inspection pré-achat :</label>
+        <input type="number" id="inspectionFees" value="1000" required>
+        <span class="error-message" id="inspectionFeesError">Veuillez entrer un nombre valide.</span>
+
+        <label for="otherFees">Autres frais (assurances, frais divers) :</label>
+        <input type="number" id="otherFees" value="1000" required>
+        <span class="error-message" id="otherFeesError">Veuillez entrer un nombre valide.</span>
+
+        <label for="monthlyPayment">Paiement mensuel maximal souhaité :</label>
+        <input type="number" id="monthlyPayment" value="2000" required>
+        <span class="error-message" id="monthlyPaymentError">Veuillez entrer un nombre valide.</span>
+
+        <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
+        <input type="number" id="interestRate" value="3" step="0.1" required>
+        <span class="error-message" id="interestRateError">Veuillez entrer un nombre valide.</span>
+
+        <label for="amortization">Durée d'amortissement (en années) :</label>
+        <input type="number" id="amortization" value="25" required>
+        <span class="error-message" id="amortizationError">Veuillez entrer un nombre valide.</span>
+
+        <button onclick="validateAndGenerateReport()">Générer le rapport</button>
     </div>
 
     <div id="reportSection" class="hidden">
@@ -101,13 +123,14 @@
             document.getElementById("reportSection").classList.add("hidden");
         }
 
-        function validateInputs() {
+        function validateAndGenerateReport() {
             const inputs = document.querySelectorAll('input[type="number"]');
             let isValid = true;
 
+            // Validation pour chaque champ
             inputs.forEach(input => {
                 const errorSpan = document.getElementById(input.id + 'Error');
-                if (isNaN(input.value) || input.value === '') {
+                if (input.value === '' || isNaN(input.value)) {
                     errorSpan.style.display = 'inline';
                     isValid = false;
                 } else {
@@ -132,14 +155,43 @@
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
             const amortization = parseInt(document.getElementById("amortization").value) * 12;
 
-            // Calculs ici...
+            // Calculs de l'hypothèque et autres frais
+            const realtorFeeAmount = salePrice * realtorFees;
+            const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
+
+            const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
+            const newHousePrice = netProceeds + maxLoanAmount;
+
+            let welcomeTax = 0;
+            if (newHousePrice <= 58900) {
+                welcomeTax = newHousePrice * 0.005;
+            } else if (newHousePrice <= 294600) {
+                welcomeTax = (58900 * 0.005) + ((newHousePrice - 58900) * 0.01);
+            } else if (newHousePrice <= 585200) {
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((newHousePrice - 294600) * 0.015);
+            } else if (newHousePrice <= 1170500) {
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((newHousePrice - 585200) * 0.02);
+            } else {
+                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((1170500 - 585200) * 0.02) + ((newHousePrice - 1170500) * 0.03);
+            }
+
+            const maxHomePrice = newHousePrice - welcomeTax;
 
             document.getElementById("calculatorSection").classList.add("hidden");
             document.getElementById("reportSection").classList.remove("hidden");
 
             // Contenu du rapport
             document.getElementById("reportContent").innerHTML = `
-                <!-- Affichage des résultats ici -->
+                <p><strong>Prix de vente estimé :</strong> ${salePrice.toFixed(2)} $</p>
+                <p><strong>Solde hypothécaire restant :</strong> ${remainingMortgage.toFixed(2)} $</p>
+                <p><strong>Montant épargné :</strong> ${savings.toFixed(2)} $</p>
+                <p><strong>Frais de courtage :</strong> ${realtorFeeAmount.toFixed(2)} $</p>
+                <p><strong>Taxe de bienvenue :</strong> ${welcomeTax.toFixed(2)} $</p>
+                <p><strong>Frais de notaire :</strong> ${notaryFees.toFixed(2)} $</p>
+                <p><strong>Frais d'inspection :</strong> ${inspectionFees.toFixed(2)} $</p>
+                <p><strong>Autres frais :</strong> ${otherFees.toFixed(2)} $</p>
+                <p><strong>Montant maximal de l'hypothèque :</strong> ${maxLoanAmount.toFixed(2)} $</p>
+                <p><strong>Montant total maximal pour la nouvelle maison :</strong> ${maxHomePrice.toFixed(2)} $</p>
             `;
         }
     </script>
