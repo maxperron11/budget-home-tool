@@ -12,10 +12,14 @@
             padding: 20px;
             background-color: #f4f4f9;
         }
-        h1 {
-            font-size: 1.5em;
+        h1, h2 {
             color: #333;
             text-align: center;
+        }
+        h2 {
+            font-size: 1.2em;
+            margin-top: 20px;
+            color: #555;
         }
         label {
             display: block;
@@ -27,7 +31,7 @@
             width: 100%;
             padding: 12px;
             font-size: 1em;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
@@ -56,17 +60,36 @@
         .hidden {
             display: none;
         }
-        .back-button {
+        .highlight {
+            font-size: 1.4em;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .back-link {
             text-align: center;
             margin-top: 15px;
         }
-        .back-button a {
+        .back-link a {
             color: #007bff;
             text-decoration: none;
             font-size: 1em;
         }
-        .back-button a:hover {
+        .back-link a:hover {
             text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            display: none;
         }
     </style>
 </head>
@@ -77,54 +100,82 @@
 
         <label for="salePrice">Prix de vente estimé de votre maison actuelle :</label>
         <input type="number" id="salePrice" value="680000" required>
+        <span class="error-message" id="salePriceError">Veuillez entrer un nombre valide.</span>
 
         <label for="remainingMortgage">Solde hypothécaire actuel :</label>
         <input type="number" id="remainingMortgage" value="322762" required>
+        <span class="error-message" id="remainingMortgageError">Veuillez entrer un nombre valide.</span>
 
         <label for="savings">Montant à mettre de côté pour l’épargne :</label>
         <input type="number" id="savings" value="40000" required>
+        <span class="error-message" id="savingsError">Veuillez entrer un nombre valide.</span>
 
         <label for="realtorFees">Pourcentage pour les frais de courtage immobilier :</label>
         <input type="number" id="realtorFees" value="5" step="0.1" required>
-
-        <label>Taxe de bienvenue :</label>
-        <p>La taxe de bienvenue sera calculée automatiquement et affichée dans le rapport des résultats.</p>
+        <span class="error-message" id="realtorFeesError">Veuillez entrer un nombre valide.</span>
 
         <label for="notaryFees">Frais de notaire :</label>
         <input type="number" id="notaryFees" value="2000" required>
+        <span class="error-message" id="notaryFeesError">Veuillez entrer un nombre valide.</span>
 
         <label for="inspectionFees">Inspection pré-achat :</label>
         <input type="number" id="inspectionFees" value="1000" required>
+        <span class="error-message" id="inspectionFeesError">Veuillez entrer un nombre valide.</span>
 
         <label for="otherFees">Autres frais (assurances, frais divers) :</label>
         <input type="number" id="otherFees" value="1000" required>
+        <span class="error-message" id="otherFeesError">Veuillez entrer un nombre valide.</span>
 
         <label for="monthlyPayment">Paiement mensuel maximal souhaité :</label>
         <input type="number" id="monthlyPayment" value="2000" required>
+        <span class="error-message" id="monthlyPaymentError">Veuillez entrer un nombre valide.</span>
 
         <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
         <input type="number" id="interestRate" value="3" step="0.1" required>
+        <span class="error-message" id="interestRateError">Veuillez entrer un nombre valide.</span>
 
         <label for="amortization">Durée d'amortissement (en années) :</label>
         <input type="number" id="amortization" value="25" required>
+        <span class="error-message" id="amortizationError">Veuillez entrer un nombre valide.</span>
 
-        <button onclick="generateReport()">Générer le rapport</button>
+        <button onclick="validateAndGenerateReport()">Générer le rapport</button>
+        <div class="back-link">
+            <a href="index.html">Retour à l'accueil</a>
+        </div>
     </div>
 
     <div id="reportSection" class="hidden">
         <h1>Rapport de Budget pour l'Achat de Maison</h1>
         <div id="reportContent"></div>
         <button onclick="showCalculator()">Retour à la Table de Calcul</button>
-    </div>
-
-    <div class="back-button">
-        <a href="index.html">Retour à l'accueil</a>
+        <div class="back-link">
+            <a href="index.html">Retour à l'accueil</a>
+        </div>
     </div>
 
     <script>
         function showCalculator() {
             document.getElementById("calculatorSection").classList.remove("hidden");
             document.getElementById("reportSection").classList.add("hidden");
+        }
+
+        function validateAndGenerateReport() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            let isValid = true;
+
+            inputs.forEach(input => {
+                const errorSpan = document.getElementById(input.id + 'Error');
+                if (input.value === '' || isNaN(input.value)) {
+                    errorSpan.style.display = 'inline';
+                    isValid = false;
+                } else {
+                    errorSpan.style.display = 'none';
+                }
+            });
+
+            if (isValid) {
+                generateReport();
+            }
         }
 
         function generateReport() {
@@ -140,7 +191,8 @@
             const amortization = parseInt(document.getElementById("amortization").value) * 12;
 
             const realtorFeeAmount = salePrice * realtorFees;
-            const netProceeds = salePrice - remainingMortgage - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
+            const cashDownAvailable = salePrice - remainingMortgage;
+            const netProceeds = cashDownAvailable - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
 
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
             const newHousePrice = netProceeds + maxLoanAmount;
@@ -163,18 +215,29 @@
             document.getElementById("calculatorSection").classList.add("hidden");
             document.getElementById("reportSection").classList.remove("hidden");
 
-            // Contenu du rapport
             document.getElementById("reportContent").innerHTML = `
-                <p><strong>Prix de vente estimé :</strong> ${salePrice.toFixed(2)} $</p>
-                <p><strong>Solde hypothécaire restant :</strong> ${remainingMortgage.toFixed(2)} $</p>
-                <p><strong>Montant épargné :</strong> ${savings.toFixed(2)} $</p>
-                <p><strong>Frais de courtage :</strong> ${realtorFeeAmount.toFixed(2)} $</p>
-                <p><strong>Taxe de bienvenue :</strong> ${welcomeTax.toFixed(2)} $</p>
-                <p><strong>Frais de notaire :</strong> ${notaryFees.toFixed(2)} $</p>
-                <p><strong>Frais d'inspection :</strong> ${inspectionFees.toFixed(2)} $</p>
-                <p><strong>Autres frais :</strong> ${otherFees.toFixed(2)} $</p>
-                <p><strong>Montant maximal de l'hypothèque :</strong> ${maxLoanAmount.toFixed(2)} $</p>
-                <p><strong>Montant total maximal pour la nouvelle maison :</strong> ${maxHomePrice.toFixed(2)} $</p>
+                <div class="section">
+                    <h2>1. Argent provenant de la vente de la maison actuelle</h2>
+                    <p><strong>Prix de vente estimé :</strong> ${salePrice.toFixed(2)} $</p>
+                    <p><strong>Solde hypothécaire restant :</strong> ${remainingMortgage.toFixed(2)} $</p>
+                    <p><strong>Montant de cashdown disponible :</strong> ${cashDownAvailable.toFixed(2)} $</p>
+                </div>
+                
+                <div class="section">
+                    <h2>2. Dépenses liées à l'achat de la nouvelle maison</h2>
+                    <p><strong>Montant épargné :</strong> ${savings.toFixed(2)} $</p>
+                    <p><strong>Frais de courtage :</strong> ${realtorFeeAmount.toFixed(2)} $</p>
+                    <p><strong>Frais de notaire :</strong> ${notaryFees.toFixed(2)} $</p>
+                    <p><strong>Frais d'inspection :</strong> ${inspectionFees.toFixed(2)} $</p>
+                    <p><strong>Autres frais :</strong> ${otherFees.toFixed(2)} $</p>
+                    <p><strong>Taxe de bienvenue :</strong> ${welcomeTax.toFixed(2)} $</p>
+                </div>
+
+                <div class="section">
+                    <h2>3. Montant total pour la nouvelle maison</h2>
+                    <p><strong>Montant maximal de l'hypothèque :</strong> ${maxLoanAmount.toFixed(2)} $</p>
+                    <p class="highlight"><strong>Montant total maximal pour la nouvelle maison :</strong> ${maxHomePrice.toFixed(2)} $</p>
+                </div>
             `;
         }
     </script>
