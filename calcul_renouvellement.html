@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil - Outils de Calcul Hypothécaire</title>
+    <title>Calcul des Paiements Mensuels au Renouvellement</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,125 +11,136 @@
             margin: auto;
             padding: 20px;
             background-color: #f4f4f9;
-            text-align: center;
         }
         h1 {
-            font-size: 1.8em;
+            font-size: 1.5em;
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 1em;
             color: #333;
         }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
         button {
-            display: block;
-            width: 80%;
+            width: 100%;
             padding: 15px;
-            background-color: #007bff;
+            background-color: #28a745;
             color: white;
-            font-size: 1.2em;
+            font-size: 1em;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-decoration: none;
-            margin: 0 auto;
+            margin-top: 15px;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #218838;
         }
-        .info-icon {
-            font-size: 1.5em;
-            color: #333;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-        .info-icon:hover {
-            color: #555;
-        }
-        .info-section {
-            display: none;
+        .result {
             margin-top: 20px;
             font-size: 1em;
             color: #333;
-            text-align: left;
-            background-color: #e9ecef;
+        }
+        .highlight {
+            font-size: 1.4em;
+            color: #28a745;
+            font-weight: bold;
+        }
+        .back-button {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: block;
             padding: 15px;
+            font-size: 1em;
             border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style responsive pour mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.3em;
+            }
+            button, .back-button {
+                font-size: 1em;
+                padding: 12px;
+            }
+            .highlight {
+                font-size: 1.2em;
+            }
         }
     </style>
 </head>
 <body>
 
-    <h1>Accueil - Outils de Calcul Hypothécaire</h1>
-    <p>Bienvenue sur notre site ! Choisissez l'outil que vous souhaitez utiliser.</p>
+    <h1>Calcul des Paiements Mensuels au Renouvellement</h1>
 
-    <!-- Bouton pour accéder au calculateur de budget avec point d'interrogation -->
-    <div class="button-container">
-        <a href="calculateur.html">
-            <button>Calculateur de Budget pour une Nouvelle Maison</button>
-        </a>
-        <span class="info-icon" onclick="toggleInfo('calculateurInfo')">❓</span>
+    <div id="calculatorSection">
+        <label for="remainingBalance">Montant résiduel de l'hypothèque :</label>
+        <input type="number" id="remainingBalance" placeholder="Ex: 300000" required>
+
+        <label for="renewalRate">Nouveau taux d'intérêt (%) :</label>
+        <input type="number" id="renewalRate" placeholder="Ex: 3" step="0.01" required>
+
+        <label for="termDuration">Durée du terme (années) :</label>
+        <select id="termDuration">
+            <option value="1">1 an</option>
+            <option value="2">2 ans</option>
+            <option value="3">3 ans</option>
+            <option value="4">4 ans</option>
+            <option value="5">5 ans</option>
+        </select>
+
+        <label for="amortizationDuration">Durée totale de l'amortissement (années) :</label>
+        <select id="amortizationDuration">
+            <option value="25" selected>25 ans</option>
+            <option value="20">20 ans</option>
+            <option value="15">15 ans</option>
+            <option value="10">10 ans</option>
+        </select>
+
+        <button onclick="calculateRenewalPayment()">Calculer le paiement mensuel</button>
     </div>
 
-    <!-- Section d'explication pour le calculateur de budget -->
-    <div id="calculateurInfo" class="info-section">
-        <p><strong>Calculateur de Budget pour une Nouvelle Maison :</strong></p>
-        <p>Ce calculateur vous aide à estimer le budget dont vous disposez pour l'achat d'une nouvelle maison. En saisissant le prix de vente de votre maison actuelle, le solde hypothécaire restant, vos épargnes, et les différents frais (notaire, courtage, etc.), l'outil vous fournira une estimation du montant total disponible pour votre nouvelle propriété.</p>
+    <div id="resultSection" class="result hidden">
+        <h2>Résultat du Calcul</h2>
+        <p><strong>Montant des paiements mensuels :</strong> <span class="highlight" id="monthlyPaymentResult"></span> $</p>
     </div>
 
-    <!-- Bouton pour accéder au tableau des paiements restants avec point d'interrogation -->
-    <div class="button-container">
-        <a href="tableau_paiements.html">
-            <button>Tableau des Paiements Restants</button>
-        </a>
-        <span class="info-icon" onclick="toggleInfo('paiementsInfo')">❓</span>
-    </div>
-
-    <!-- Section d'explication pour le tableau des paiements restants -->
-    <div id="paiementsInfo" class="info-section">
-        <p><strong>Tableau des Paiements Restants :</strong></p>
-        <p>Ce tableau vous permet de visualiser les paiements hypothécaires restants jusqu'à la fin de votre terme actuel. En entrant la date de début du terme, la date de fin, le montant initial de l'hypothèque, le taux d'intérêt et le montant des paiements mensuels, vous obtiendrez un calendrier des paiements jusqu'à la fin du terme.</p>
-    </div>
-
-    <!-- Bouton pour accéder au calcul des paiements mensuels avec point d'interrogation -->
-    <div class="button-container">
-        <a href="calcul_mensuel.html">
-            <button>Calcul des Paiements Mensuels pour une Nouvelle Maison</button>
-        </a>
-        <span class="info-icon" onclick="toggleInfo('mensuelInfo')">❓</span>
-    </div>
-
-    <!-- Section d'explication pour le calcul des paiements mensuels -->
-    <div id="mensuelInfo" class="info-section">
-        <p><strong>Calcul des Paiements Mensuels pour une Nouvelle Maison :</strong></p>
-        <p>Ce calculateur permet de déterminer les paiements mensuels en fonction du prix de la nouvelle maison. En entrant le prix de la propriété, le solde hypothécaire restant, le montant à mettre de côté pour l'épargne, et le taux d'intérêt, vous pouvez estimer le paiement mensuel requis.</p>
-    </div>
-
-    <!-- Nouveau bouton pour le calcul des paiements au renouvellement d'hypothèque -->
-    <div class="button-container">
-        <a href="calcul_renouvellement.html">
-            <button>Calcul des Paiements Mensuels au Renouvellement</button>
-        </a>
-        <span class="info-icon" onclick="toggleInfo('renouvellementInfo')">❓</span>
-    </div>
-
-    <!-- Section d'explication pour le calcul des paiements au renouvellement d'hypothèque -->
-    <div id="renouvellementInfo" class="info-section">
-        <p><strong>Calcul des Paiements Mensuels au Renouvellement :</strong></p>
-        <p>Ce calculateur vous permet de déterminer le montant des paiements mensuels lors de votre renouvellement d'hypothèque à une date précise. En entrant le solde hypothécaire restant, le taux d'intérêt renouvelé, la période d'amortissement restante, et la date du renouvellement, vous pouvez estimer le nouveau montant mensuel à payer.</p>
-    </div>
+    <!-- Bouton pour revenir à l'index -->
+    <a href="index.html" class="back-button">Retour à l'accueil</a>
 
     <script>
-        function toggleInfo(infoId) {
-            const infoSection = document.getElementById(infoId);
-            // Affiche ou masque la section d'information en fonction de son état actuel
-            if (infoSection.style.display === "none" || infoSection.style.display === "") {
-                infoSection.style.display = "block";
-            } else {
-                infoSection.style.display = "none";
-            }
+        function calculateRenewalPayment() {
+            // Récupérer les valeurs des champs
+            const remainingBalance = parseFloat(document.getElementById("remainingBalance").value);
+            const renewalRate = parseFloat(document.getElementById("renewalRate").value) / 100 / 12; // Taux mensuel
+            const amortizationDuration = parseInt(document.getElementById("amortizationDuration").value) * 12; // Convertir en mois
+
+            // Calculer le paiement mensuel en fonction du montant résiduel, du taux et de l'amortissement
+            const monthlyPayment = (remainingBalance * renewalRate) / (1 - Math.pow(1 + renewalRate, -amortizationDuration));
+
+            // Afficher le résultat
+            document.getElementById("monthlyPaymentResult").textContent = monthlyPayment.toFixed(2);
+            document.getElementById("resultSection").classList.remove("hidden");
         }
     </script>
 
