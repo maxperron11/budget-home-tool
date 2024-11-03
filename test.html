@@ -86,7 +86,45 @@
     <div id="calculatorSection">
         <h1>Calculateur de Budget pour une Nouvelle Maison</h1>
 
-        <!-- Inputs here -->
+        <label for="salePrice">Prix de vente estimé de votre maison actuelle :</label>
+        <input type="number" id="salePrice" value="680000" required>
+        <span class="error-message" id="salePriceError">Veuillez entrer un nombre valide.</span>
+
+        <label for="remainingMortgage">Solde hypothécaire actuel :</label>
+        <input type="number" id="remainingMortgage" value="322762" required>
+        <span class="error-message" id="remainingMortgageError">Veuillez entrer un nombre valide.</span>
+
+        <label for="savings">Montant à mettre de côté pour l’épargne :</label>
+        <input type="number" id="savings" value="40000" required>
+        <span class="error-message" id="savingsError">Veuillez entrer un nombre valide.</span>
+
+        <label for="realtorFees">Pourcentage pour les frais de courtage immobilier :</label>
+        <input type="number" id="realtorFees" value="5" step="0.1" required>
+        <span class="error-message" id="realtorFeesError">Veuillez entrer un nombre valide.</span>
+
+        <label for="notaryFees">Frais de notaire :</label>
+        <input type="number" id="notaryFees" value="2000" required>
+        <span class="error-message" id="notaryFeesError">Veuillez entrer un nombre valide.</span>
+
+        <label for="inspectionFees">Inspection pré-achat :</label>
+        <input type="number" id="inspectionFees" value="1000" required>
+        <span class="error-message" id="inspectionFeesError">Veuillez entrer un nombre valide.</span>
+
+        <label for="otherFees">Autres frais (assurances, frais divers) :</label>
+        <input type="number" id="otherFees" value="1000" required>
+        <span class="error-message" id="otherFeesError">Veuillez entrer un nombre valide.</span>
+
+        <label for="monthlyPayment">Paiement mensuel maximal souhaité :</label>
+        <input type="number" id="monthlyPayment" value="2000" required>
+        <span class="error-message" id="monthlyPaymentError">Veuillez entrer un nombre valide.</span>
+
+        <label for="interestRate">Taux d'intérêt hypothécaire (%) :</label>
+        <input type="number" id="interestRate" value="3" step="0.1" required>
+        <span class="error-message" id="interestRateError">Veuillez entrer un nombre valide.</span>
+
+        <label for="amortization">Durée d'amortissement (en années) :</label>
+        <input type="number" id="amortization" value="25" required>
+        <span class="error-message" id="amortizationError">Veuillez entrer un nombre valide.</span>
 
         <button onclick="validateAndGenerateReport()">Générer le rapport</button>
     </div>
