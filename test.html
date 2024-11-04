@@ -27,6 +27,23 @@
             font-size: 1em;
             color: #333;
         }
+        .tooltip-icon {
+            color: #007bff;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 5px;
+            font-size: 1.2em;
+        }
+        .tooltip-message {
+            display: none;
+            font-size: 0.9em;
+            color: #333;
+            background-color: #eef5ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+            border: 1px solid #007bff;
+        }
         input[type="number"], select {
             width: 100%;
             padding: 12px;
@@ -98,7 +115,12 @@
     <div id="calculatorSection">
         <h1>Calculateur de Budget pour une Nouvelle Maison</h1>
 
-        <label for="region">Région :</label>
+        <label for="region">Région :
+            <span class="tooltip-icon" onclick="toggleTooltip()">&#9432;</span>
+        </label>
+        <div id="tooltip" class="tooltip-message">
+            La taxe de bienvenue varie selon la région. Veuillez choisir la région pour voir le calcul approprié.
+        </div>
         <select id="region" required>
             <option value="laval">Ville de Laval</option>
             <option value="quebec">Ville de Québec</option>
@@ -109,9 +131,6 @@
         <label for="salePrice">Prix de vente estimé de votre maison actuelle :</label>
         <input type="number" id="salePrice" value="680000" required>
         <span class="error-message" id="salePriceError">Veuillez entrer un nombre valide.</span>
-        <p>
-            <a href="https://www.journaldemontreal.com/2023/04/26/enfin-un-outil-pour-connaitre-le-prix-des-maisons-vendues-dans-son-voisinage" target="_blank">Consultez cet outil pour connaître le prix des maisons vendues dans votre voisinage</a>
-        </p>
 
         <label for="remainingMortgage">Solde hypothécaire actuel :</label>
         <input type="number" id="remainingMortgage" value="322762" required>
@@ -165,6 +184,11 @@
     </div>
 
     <script>
+        function toggleTooltip() {
+            const tooltip = document.getElementById("tooltip");
+            tooltip.style.display = tooltip.style.display === "block" ? "none" : "block";
+        }
+
         function showCalculator() {
             document.getElementById("calculatorSection").classList.remove("hidden");
             document.getElementById("reportSection").classList.add("hidden");
