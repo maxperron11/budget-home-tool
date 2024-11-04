@@ -220,6 +220,65 @@
             }
         }
 
+        function calculateWelcomeTax(price, region) {
+            let welcomeTax = 0;
+            switch(region) {
+                case 'laval':
+                    if (price <= 58900) {
+                        welcomeTax = price * 0.005;
+                    } else if (price <= 294600) {
+                        welcomeTax = (58900 * 0.005) + ((price - 58900) * 0.01);
+                    } else if (price <= 585200) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((price - 294600) * 0.015);
+                    } else {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((price - 585200) * 0.02);
+                    }
+                    break;
+                case 'quebec':
+                    if (price <= 58900) {
+                        welcomeTax = price * 0.005;
+                    } else if (price <= 294600) {
+                        welcomeTax = (58900 * 0.005) + ((price - 58900) * 0.01);
+                    } else if (price <= 500000) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((price - 294600) * 0.015);
+                    } else if (price <= 1000000) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((500000 - 294600) * 0.015) + ((price - 500000) * 0.02);
+                    } else if (price <= 2000000) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((500000 - 294600) * 0.015) + ((1000000 - 500000) * 0.02) + ((price - 1000000) * 0.025);
+                    } else {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((500000 - 294600) * 0.015) + ((1000000 - 500000) * 0.02) + ((2000000 - 1000000) * 0.025) + ((price - 2000000) * 0.03);
+                    }
+                    break;
+                case 'montreal':
+                    if (price <= 58900) {
+                        welcomeTax = price * 0.005;
+                    } else if (price <= 294600) {
+                        welcomeTax = (58900 * 0.005) + ((price - 58900) * 0.01);
+                    } else if (price <= 552300) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((price - 294600) * 0.015);
+                    } else if (price <= 1104700) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((552300 - 294600) * 0.015) + ((price - 552300) * 0.02);
+                    } else if (price <= 2136500) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((552300 - 294600) * 0.015) + ((1104700 - 552300) * 0.02) + ((price - 1104700) * 0.025);
+                    } else if (price <= 3113000) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((552300 - 294600) * 0.015) + ((1104700 - 552300) * 0.02) + ((2136500 - 1104700) * 0.025) + ((price - 2136500) * 0.035);
+                    } else {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((552300 - 294600) * 0.015) + ((1104700 - 552300) * 0.02) + ((2136500 - 1104700) * 0.025) + ((3113000 - 2136500) * 0.035) + ((price - 3113000) * 0.04);
+                    }
+                    break;
+                case 'autres':
+                    if (price <= 58900) {
+                        welcomeTax = price * 0.005;
+                    } else if (price <= 294600) {
+                        welcomeTax = (58900 * 0.005) + ((price - 58900) * 0.01);
+                    } else {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((price - 294600) * 0.015);
+                    }
+                    break;
+            }
+            return welcomeTax;
+        }
+
         function generateReport() {
             const salePrice = parseFloat(document.getElementById("salePrice").value);
             const remainingMortgage = parseFloat(document.getElementById("remainingMortgage").value);
@@ -231,6 +290,7 @@
             const monthlyPayment = parseFloat(document.getElementById("monthlyPayment").value);
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
             const amortization = parseInt(document.getElementById("amortization").value) * 12;
+            const region = document.getElementById("region").value;
 
             const realtorFeeAmount = salePrice * realtorFees;
             const cashDownAvailable = salePrice - remainingMortgage;
@@ -238,6 +298,9 @@
 
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
             const newHousePrice = netProceeds + maxLoanAmount;
+
+            const welcomeTax = calculateWelcomeTax(newHousePrice, region);
+            const maxHomePrice = newHousePrice - welcomeTax;
 
             document.getElementById("calculatorSection").classList.add("hidden");
             document.getElementById("reportSection").classList.remove("hidden");
@@ -255,11 +318,12 @@
                     <div>Frais de notaire :</div><div>${notaryFees.toFixed(2)} $</div>
                     <div>Frais d'inspection :</div><div>${inspectionFees.toFixed(2)} $</div>
                     <div>Autres frais :</div><div>${otherFees.toFixed(2)} $</div>
+                    <div>Taxe de bienvenue :</div><div>${welcomeTax.toFixed(2)} $</div>
                 </div>
 
                 <div class="section">
                     <div>Montant maximal de l'hypothèque :</div><div>${maxLoanAmount.toFixed(2)} $</div>
-                    <div class="highlight">Montant total maximal pour la nouvelle maison :</div><div class="highlight">${newHousePrice.toFixed(2)} $</div>
+                    <div class="highlight">Montant total maximal pour la nouvelle maison :</div><div class="highlight">${maxHomePrice.toFixed(2)} $</div>
                 </div>
             `;
         }
