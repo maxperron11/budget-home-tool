@@ -27,7 +27,7 @@
             font-size: 1em;
             color: #333;
         }
-        input[type="number"] {
+        input[type="number"], select {
             width: 100%;
             padding: 12px;
             font-size: 1em;
@@ -98,9 +98,20 @@
     <div id="calculatorSection">
         <h1>Calculateur de Budget pour une Nouvelle Maison</h1>
 
+        <label for="region">Région :</label>
+        <select id="region" required>
+            <option value="laval">Ville de Laval</option>
+            <option value="quebec">Ville de Québec</option>
+            <option value="montreal">Ville de Montréal</option>
+            <option value="autres">Toutes les autres régions du Québec</option>
+        </select>
+
         <label for="salePrice">Prix de vente estimé de votre maison actuelle :</label>
         <input type="number" id="salePrice" value="680000" required>
         <span class="error-message" id="salePriceError">Veuillez entrer un nombre valide.</span>
+        <p>
+            <a href="https://www.journaldemontreal.com/2023/04/26/enfin-un-outil-pour-connaitre-le-prix-des-maisons-vendues-dans-son-voisinage" target="_blank">Consultez cet outil pour connaître le prix des maisons vendues dans votre voisinage</a>
+        </p>
 
         <label for="remainingMortgage">Solde hypothécaire actuel :</label>
         <input type="number" id="remainingMortgage" value="322762" required>
@@ -178,6 +189,65 @@
             }
         }
 
+        function calculateWelcomeTax(price, region) {
+            let welcomeTax = 0;
+            switch(region) {
+                case 'laval':
+                    if (price <= 58900) {
+                        welcomeTax = price * 0.005;
+                    } else if (price <= 294600) {
+                        welcomeTax = (58900 * 0.005) + ((price - 58900) * 0.01);
+                    } else if (price <= 585200) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((price - 294600) * 0.015);
+                    } else {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((price - 585200) * 0.02);
+                    }
+                    break;
+                case 'quebec':
+                    if (price <= 58900) {
+                        welcomeTax = price * 0.005;
+                    } else if (price <= 294600) {
+                        welcomeTax = (58900 * 0.005) + ((price - 58900) * 0.01);
+                    } else if (price <= 500000) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((price - 294600) * 0.015);
+                    } else if (price <= 1000000) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((500000 - 294600) * 0.015) + ((price - 500000) * 0.02);
+                    } else if (price <= 2000000) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((500000 - 294600) * 0.015) + ((1000000 - 500000) * 0.02) + ((price - 1000000) * 0.025);
+                    } else {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((500000 - 294600) * 0.015) + ((1000000 - 500000) * 0.02) + ((2000000 - 1000000) * 0.025) + ((price - 2000000) * 0.03);
+                    }
+                    break;
+                case 'montreal':
+                    if (price <= 58900) {
+                        welcomeTax = price * 0.005;
+                    } else if (price <= 294600) {
+                        welcomeTax = (58900 * 0.005) + ((price - 58900) * 0.01);
+                    } else if (price <= 552300) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((price - 294600) * 0.015);
+                    } else if (price <= 1104700) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((552300 - 294600) * 0.015) + ((price - 552300) * 0.02);
+                    } else if (price <= 2136500) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((552300 - 294600) * 0.015) + ((1104700 - 552300) * 0.02) + ((price - 1104700) * 0.025);
+                    } else if (price <= 3113000) {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((552300 - 294600) * 0.015) + ((1104700 - 552300) * 0.02) + ((2136500 - 1104700) * 0.025) + ((price - 2136500) * 0.035);
+                    } else {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((552300 - 294600) * 0.015) + ((1104700 - 552300) * 0.02) + ((2136500 - 1104700) * 0.025) + ((3113000 - 2136500) * 0.035) + ((price - 3113000) * 0.04);
+                    }
+                    break;
+                case 'autres':
+                    if (price <= 58900) {
+                        welcomeTax = price * 0.005;
+                    } else if (price <= 294600) {
+                        welcomeTax = (58900 * 0.005) + ((price - 58900) * 0.01);
+                    } else {
+                        welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((price - 294600) * 0.015);
+                    }
+                    break;
+            }
+            return welcomeTax;
+        }
+
         function generateReport() {
             const salePrice = parseFloat(document.getElementById("salePrice").value);
             const remainingMortgage = parseFloat(document.getElementById("remainingMortgage").value);
@@ -189,6 +259,7 @@
             const monthlyPayment = parseFloat(document.getElementById("monthlyPayment").value);
             const interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
             const amortization = parseInt(document.getElementById("amortization").value) * 12;
+            const region = document.getElementById("region").value;
 
             const realtorFeeAmount = salePrice * realtorFees;
             const cashDownAvailable = salePrice - remainingMortgage;
@@ -197,19 +268,7 @@
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
             const newHousePrice = netProceeds + maxLoanAmount;
 
-            let welcomeTax = 0;
-            if (newHousePrice <= 58900) {
-                welcomeTax = newHousePrice * 0.005;
-            } else if (newHousePrice <= 294600) {
-                welcomeTax = (58900 * 0.005) + ((newHousePrice - 58900) * 0.01);
-            } else if (newHousePrice <= 585200) {
-                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((newHousePrice - 294600) * 0.015);
-            } else if (newHousePrice <= 1170500) {
-                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((newHousePrice - 585200) * 0.02);
-            } else {
-                welcomeTax = (58900 * 0.005) + ((294600 - 58900) * 0.01) + ((585200 - 294600) * 0.015) + ((1170500 - 585200) * 0.02) + ((newHousePrice - 1170500) * 0.03);
-            }
-
+            const welcomeTax = calculateWelcomeTax(newHousePrice, region);
             const maxHomePrice = newHousePrice - welcomeTax;
 
             document.getElementById("calculatorSection").classList.add("hidden");
