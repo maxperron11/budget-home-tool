@@ -16,15 +16,17 @@
             color: #333;
             text-align: center;
         }
+        h1 {
+            font-size: 1.6em;
+        }
         h2 {
             font-size: 1.2em;
-            margin-top: 20px;
             color: #555;
         }
         label {
             display: block;
-            margin: 15px 0 5px;
-            font-size: 1em;
+            margin: 10px 0 5px;
+            font-size: 0.9em;
             color: #333;
         }
         .tooltip-icon {
@@ -36,18 +38,17 @@
         }
         .tooltip-message {
             display: none;
-            font-size: 0.9em;
+            font-size: 0.8em;
             color: #333;
             background-color: #eef5ff;
             padding: 10px;
             border-radius: 5px;
-            margin-top: 5px;
             border: 1px solid #007bff;
         }
         input[type="number"], select {
             width: 100%;
-            padding: 12px;
-            font-size: 1em;
+            padding: 10px;
+            font-size: 0.9em;
             margin-bottom: 5px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -55,7 +56,7 @@
         }
         button {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background-color: #28a745;
             color: white;
             font-size: 1em;
@@ -67,38 +68,34 @@
         button:hover {
             background-color: #218838;
         }
-        .result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-        }
         .hidden {
             display: none;
         }
         .highlight {
-            font-size: 1.4em;
+            font-size: 1.2em;
             color: #28a745;
             font-weight: bold;
-            margin-top: 20px;
             text-align: center;
         }
         .section {
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+            margin-bottom: 15px;
             border-radius: 5px;
-            background-color: #f9f9f9;
-            display: flex;
-            flex-direction: column;
+            overflow: hidden;
         }
-        .section p {
-            display: flex;
-            justify-content: space-between;
-            margin: 5px 0;
+        .section div {
+            padding: 10px;
+            font-size: 0.9em;
+            color: #333;
         }
-        .amount {
+        .section div:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+        .section div:nth-child(even) {
+            background-color: #e9e9e9;
+            text-align: right;
             font-weight: bold;
         }
         .back-link {
@@ -108,14 +105,14 @@
         .back-link a {
             color: #007bff;
             text-decoration: none;
-            font-size: 1em;
+            font-size: 0.9em;
         }
         .back-link a:hover {
             text-decoration: underline;
         }
         .error-message {
             color: red;
-            font-size: 0.9em;
+            font-size: 0.8em;
             display: none;
         }
     </style>
@@ -247,25 +244,22 @@
 
             document.getElementById("reportContent").innerHTML = `
                 <div class="section">
-                    <h2>1. Argent provenant de la vente de la maison actuelle</h2>
-                    <p><span>Prix de vente estimé :</span> <span class="amount">${salePrice.toFixed(2)} $</span></p>
-                    <p><span>Solde hypothécaire restant :</span> <span class="amount">${remainingMortgage.toFixed(2)} $</span></p>
-                    <p><span>Montant de cashdown disponible :</span> <span class="amount">${cashDownAvailable.toFixed(2)} $</span></p>
+                    <div>Prix de vente estimé :</div><div>${salePrice.toFixed(2)} $</div>
+                    <div>Solde hypothécaire restant :</div><div>${remainingMortgage.toFixed(2)} $</div>
+                    <div>Montant de cashdown disponible :</div><div>${cashDownAvailable.toFixed(2)} $</div>
                 </div>
                 
                 <div class="section">
-                    <h2>2. Dépenses liées à l'achat de la nouvelle maison</h2>
-                    <p><span>Montant épargné :</span> <span class="amount">${savings.toFixed(2)} $</span></p>
-                    <p><span>Frais de courtage :</span> <span class="amount">${realtorFeeAmount.toFixed(2)} $</span></p>
-                    <p><span>Frais de notaire :</span> <span class="amount">${notaryFees.toFixed(2)} $</span></p>
-                    <p><span>Frais d'inspection :</span> <span class="amount">${inspectionFees.toFixed(2)} $</span></p>
-                    <p><span>Autres frais :</span> <span class="amount">${otherFees.toFixed(2)} $</span></p>
+                    <div>Montant épargné :</div><div>${savings.toFixed(2)} $</div>
+                    <div>Frais de courtage :</div><div>${realtorFeeAmount.toFixed(2)} $</div>
+                    <div>Frais de notaire :</div><div>${notaryFees.toFixed(2)} $</div>
+                    <div>Frais d'inspection :</div><div>${inspectionFees.toFixed(2)} $</div>
+                    <div>Autres frais :</div><div>${otherFees.toFixed(2)} $</div>
                 </div>
 
                 <div class="section">
-                    <h2>3. Montant total pour la nouvelle maison</h2>
-                    <p><span>Montant maximal de l'hypothèque :</span> <span class="amount">${maxLoanAmount.toFixed(2)} $</span></p>
-                    <p class="highlight"><span>Montant total maximal pour la nouvelle maison :</span> <span class="amount">${newHousePrice.toFixed(2)} $</span></p>
+                    <div>Montant maximal de l'hypothèque :</div><div>${maxLoanAmount.toFixed(2)} $</div>
+                    <div class="highlight">Montant total maximal pour la nouvelle maison :</div><div class="highlight">${newHousePrice.toFixed(2)} $</div>
                 </div>
             `;
         }
