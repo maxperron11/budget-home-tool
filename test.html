@@ -297,7 +297,6 @@
             const netProceeds = cashDownAvailable - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
 
             if (netProceeds <= 0) {
-                // Si les produits nets sont insuffisants pour un cashdown positif
                 document.getElementById("reportSection").classList.remove("hidden");
                 document.getElementById("calculatorSection").classList.add("hidden");
                 document.getElementById("reportContent").innerHTML = `
@@ -307,11 +306,23 @@
                 return;
             }
 
-            // Calculs de prêt hypothécaire et du prix de la nouvelle maison
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
             const newHousePrice = netProceeds + maxLoanAmount;
             const welcomeTax = calculateWelcomeTax(newHousePrice, region);
             const maxHomePrice = newHousePrice - welcomeTax;
+
+            // Calculer le pourcentage du cashdown
+            const cashdownPercentage = ((netProceeds / newHousePrice) * 100).toFixed(2);
+
+            if (cashdownPercentage < 20) {
+                document.getElementById("reportSection").classList.remove("hidden");
+                document.getElementById("calculatorSection").classList.add("hidden");
+                document.getElementById("reportContent").innerHTML = `
+                    <div class="highlight">Erreur : Le cashdown est inférieur à 20% du prix de la maison.</div>
+                    <div>Veuillez ajuster le montant du cashdown pour continuer.</div>
+                `;
+                return;
+            }
 
             document.getElementById("calculatorSection").classList.add("hidden");
             document.getElementById("reportSection").classList.remove("hidden");
@@ -321,6 +332,7 @@
                     <div>Prix de vente estimé :</div><div>${salePrice.toFixed(2)} $</div>
                     <div>Solde hypothécaire restant :</div><div>${remainingMortgage.toFixed(2)} $</div>
                     <div>Montant de cashdown disponible :</div><div>${cashDownAvailable.toFixed(2)} $</div>
+                    <div>Pourcentage de cashdown :</div><div>${cashdownPercentage} %</div>
                 </div>
                 
                 <div class="section">
