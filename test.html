@@ -296,9 +296,20 @@
             const cashDownAvailable = salePrice - remainingMortgage;
             const netProceeds = cashDownAvailable - savings - realtorFeeAmount - notaryFees - inspectionFees - otherFees;
 
+            if (netProceeds <= 0) {
+                // Si les produits nets sont insuffisants pour un cashdown positif
+                document.getElementById("reportSection").classList.remove("hidden");
+                document.getElementById("calculatorSection").classList.add("hidden");
+                document.getElementById("reportContent").innerHTML = `
+                    <div class="highlight">Erreur : Le montant de cashdown disponible est insuffisant pour permettre le financement.</div>
+                    <div>Veuillez réduire le montant épargné ou ajuster d'autres frais pour continuer.</div>
+                `;
+                return;
+            }
+
+            // Calculs de prêt hypothécaire et du prix de la nouvelle maison
             const maxLoanAmount = (monthlyPayment / interestRate) * (1 - Math.pow(1 + interestRate, -amortization));
             const newHousePrice = netProceeds + maxLoanAmount;
-
             const welcomeTax = calculateWelcomeTax(newHousePrice, region);
             const maxHomePrice = newHousePrice - welcomeTax;
 
